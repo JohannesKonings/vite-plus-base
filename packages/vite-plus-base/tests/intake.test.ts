@@ -1,10 +1,20 @@
 import { describe, expect, it } from "vite-plus/test";
 
 import { intakeFileAsJson } from "../template/src/blocks/intake/intakeFileAsJson.ts";
+import { intakeForTransition } from "../template/src/blocks/intake/intakeForTransition.ts";
 import { intakeWorkspaceBingo } from "../template/src/blocks/intake/intakeWorkspaceBingo.ts";
 import { intakeWorkspaceConfig } from "../template/src/blocks/intake/intakeWorkspaceConfig.ts";
 
 describe("intake helpers", () => {
+  it("intakeForTransition reads only template-relevant paths", async () => {
+    const files = await intakeForTransition("../..");
+
+    expect(files.node_modules).toBeUndefined();
+    expect(files.public).toBeUndefined();
+    expect(intakeFileAsJson(files, ["package.json"])).toMatchObject({ name: "vite-plus-base" });
+    expect(files["vite.config.ts"]).toBeDefined();
+  });
+
   it("reads package.json from bingo directory intake tuples", () => {
     expect(
       intakeFileAsJson(

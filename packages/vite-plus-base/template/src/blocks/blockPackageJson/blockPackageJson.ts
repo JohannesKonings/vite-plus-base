@@ -4,7 +4,12 @@ import { blockPackageJsonConfigSchema } from "../../../../src/workspace-config.t
 import { base } from "../../base.ts";
 import { intakeFileAsJson } from "../intake/intakeFileAsJson.ts";
 import { intakeWorkspaceBingo } from "../intake/intakeWorkspaceBingo.ts";
-import { formatPackageJson, mergeDevDependencies } from "./package-json.ts";
+import {
+  defaultDevEngines,
+  defaultEngines,
+  formatPackageJson,
+  mergeDevDependencies,
+} from "./package-json.ts";
 
 const packageJsonProperties = blockPackageJsonConfigSchema
   .partial()
@@ -50,7 +55,12 @@ export const blockPackageJson = base.createBlock({
 
     return {
       files: {
-        "package.json": formatPackageJson(packageData, { name, devDependencies }),
+        "package.json": formatPackageJson(packageData, {
+          name,
+          devDependencies,
+          devEngines: defaultDevEngines,
+          engines: defaultEngines,
+        }),
       },
       scripts: [{ phase: 0, commands: ["vp install"] }],
     };
