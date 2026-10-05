@@ -4,19 +4,17 @@ import { createBase } from "bingo-stratum";
 import { z } from "zod";
 
 import { intakeFileAsJson } from "./blocks/intake/intakeFileAsJson.ts";
-import { intakeWorkspaceName } from "./blocks/intake/intakeWorkspaceName.ts";
 
 const packageDataSchema = z.record(z.string(), z.unknown()).optional();
 
 export const base = createBase({
   options: {
     directory: z.string().optional().describe("Project directory"),
-    name: z.string().describe("Package name from defineWorkspaceConfig"),
+    name: z.string().describe("Package name from package.json or project directory"),
     packageData: packageDataSchema.describe("Existing package.json data"),
   },
   prepare({ files, options }) {
     const packageData = files ? intakeFileAsJson(files, ["package.json"]) : undefined;
-    const nameFromViteConfig = files ? intakeWorkspaceName(files) : undefined;
     const nameFromPackage =
       packageData && typeof packageData.name === "string" ? packageData.name : undefined;
     const directory = options.directory ?? ".";
@@ -24,7 +22,7 @@ export const base = createBase({
 
     return {
       packageData,
-      name: options.name ?? nameFromViteConfig ?? nameFromPackage ?? nameFromDirectory,
+      name: options.name ?? nameFromPackage ?? nameFromDirectory,
     };
   },
 });

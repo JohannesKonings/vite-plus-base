@@ -1,12 +1,14 @@
 import { z } from "zod";
 
+import { blockPackageJsonConfigSchema } from "../../../src/workspace-config.ts";
 import { base } from "../base.ts";
 import { intakeFileAsJson } from "./intake/intakeFileAsJson.ts";
+import { intakeWorkspaceBingo } from "./intake/intakeWorkspaceBingo.ts";
 import { formatPackageJson, mergeDevDependencies } from "./package-json.ts";
 
-const packageJsonProperties = z
-  .object({
-    name: z.string().optional(),
+const packageJsonProperties = blockPackageJsonConfigSchema
+  .partial()
+  .extend({
     devDependencies: z.record(z.string(), z.string()).optional(),
     existingPackage: z.record(z.string(), z.unknown()).optional(),
   })
@@ -21,13 +23,17 @@ export const blockPackageJson = base.createBlock({
   },
   intake({ files }) {
     const packageData = intakeFileAsJson(files, ["package.json"]);
-    if (!packageData) {
+    const workspaceBingo = intakeWorkspaceBingo(files);
+    const blockConfig = workspaceBingo?.blockPackageJson;
+
+    if (!packageData && !blockConfig) {
       return undefined;
     }
 
     return {
       properties: {
-        existingPackage: packageData,
+        ...blockConfig,
+        ...(packageData ? { existingPackage: packageData } : {}),
       },
     };
   },
@@ -36,7 +42,7 @@ export const blockPackageJson = base.createBlock({
       (addons.properties.existingPackage as Record<string, unknown> | undefined) ??
       options.packageData;
     const packageData = { ...existingPackage };
-    const name = options.name ?? addons.properties.name;
+    const name = addons.properties.name ?? options.name;
     const devDependencies = mergeDevDependencies(
       packageData.devDependencies as Record<string, string> | undefined,
       addons.properties.devDependencies,

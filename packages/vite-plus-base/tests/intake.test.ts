@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vite-plus/test";
 
 import { intakeFileAsJson } from "../template/src/blocks/intake/intakeFileAsJson.ts";
-import { intakeWorkspaceName } from "../template/src/blocks/intake/intakeWorkspaceName.ts";
+import { intakeWorkspaceBingo } from "../template/src/blocks/intake/intakeWorkspaceBingo.ts";
 
 describe("intake helpers", () => {
   it("reads package.json from bingo directory intake tuples", () => {
@@ -26,18 +26,58 @@ describe("intake helpers", () => {
     });
   });
 
-  it("reads name from defineWorkspaceConfig in vite.config.ts", () => {
+  it("reads nested files from bingo directory intake tuples", () => {
     expect(
-      intakeWorkspaceName({
+      intakeFileAsJson(
+        {
+          ".vscode": {
+            "settings.json": [
+              JSON.stringify({
+                "editor.formatOnSave": true,
+              }),
+              { executable: false },
+            ],
+          },
+        },
+        [".vscode", "settings.json"],
+      ),
+    ).toEqual({
+      "editor.formatOnSave": true,
+    });
+  });
+
+  it("parses bingo.blockPackageJson from defineWorkspaceConfig in vite.config.ts", () => {
+    expect(
+      intakeWorkspaceBingo({
         "vite.config.ts": `import { defineWorkspaceConfig } from "@jaykingson/vite-plus-base";
 
 export default defineWorkspaceConfig({
-  name: "my-monorepo",
+  bingo: {
+    blockPackageJson: {
+      name: "my-monorepo",
+    },
+  },
   lint: {
     overrides: [],
   },
 });`,
       }),
-    ).toBe("my-monorepo");
+    ).toEqual({
+      blockPackageJson: {
+        name: "my-monorepo",
+      },
+    });
+  });
+
+  it("throws for invalid bingo config in vite.config.ts", () => {
+    expect(() =>
+      intakeWorkspaceBingo({
+        "vite.config.ts": `export default defineWorkspaceConfig({
+  bingo: {
+    blockPackageJson: {},
+  },
+});`,
+      }),
+    ).toThrow();
   });
 });

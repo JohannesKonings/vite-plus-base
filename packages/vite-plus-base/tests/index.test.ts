@@ -126,7 +126,15 @@ describe("@jaykingson/vite-plus-base", () => {
   });
 
   it("defineWorkspaceConfig layers workspace defaults", async () => {
-    const config = await resolveConfig(defineWorkspaceConfig({ name: "example" }));
+    const config = await resolveConfig(
+      defineWorkspaceConfig({
+        bingo: {
+          blockPackageJson: {
+            name: "example",
+          },
+        },
+      }),
+    );
     expect(config.staged).toEqual({ "*": "vp check --fix" });
     expect(config.run).toEqual({ cache: true });
   });

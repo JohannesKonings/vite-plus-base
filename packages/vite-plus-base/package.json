@@ -36,9 +36,5 @@
   },
   "peerDependencies": {
     "vite-plus": ">=1.0.0"
-  },
-  "inlinedDependencies": {
-    "@oxc-project/types": "0.151.0",
-    "@voidzero-dev/vite-plus-core": "1.0.0"
   }
 }
