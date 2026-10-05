@@ -5,11 +5,14 @@ catalogMode: prefer
 
 catalog:
   "@types/node": ^24
+  bingo: ^0.9.3
   typescript: ^7.0.2
-  vite: npm:@voidzero-dev/vite-plus-core@0.2.7
-  vite-plus: 0.2.7
+  zod: ^3.25.76
+  vite: npm:@voidzero-dev/vite-plus-core@1.0.0
+  vite-plus: 1.0.0
+  bingo-stratum: 0.7.1
 overrides:
-  vite: "catalog:"
+  vite@*: "catalog:"
 peerDependencyRules:
   allowAny:
     - vite

@@ -8,13 +8,15 @@
     "prepare": "vp config"
   },
   "devDependencies": {
+    "@jaykingson/vite-plus-base": "workspace:*",
+    "dependency-cruiser": "^18.5.0",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.9.0",
+      "version": "12.9.1",
       "onFail": "download"
     }
   },
