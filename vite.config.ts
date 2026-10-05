@@ -1,5 +1,21 @@
 import { defineWorkspaceConfig } from "./packages/vite-plus-base/src/index.ts";
 
 export default defineWorkspaceConfig({
-  name: "vite-plus-base",
+  bingo: {
+    blockPackageJson: {
+      name: "vite-plus-base",
+    },
+    blockAgentSkills: {
+      glossaryMap: {
+        root: {
+          glossary: "GLOSSARY.md",
+          adr: "docs/adr",
+        },
+        "packages/vite-plus-base": {
+          glossary: "packages/vite-plus-base/GLOSSARY.md",
+          adr: "packages/vite-plus-base/docs/adr",
+        },
+      },
+    },
+  },
 });

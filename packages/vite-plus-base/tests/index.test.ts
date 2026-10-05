@@ -1,4 +1,4 @@
-import type { UserConfig } from "vite";
+import type { ViteUserConfig } from "vite-plus";
 import { describe, expect, it } from "vite-plus/test";
 import {
   defineConfig,
@@ -102,7 +102,15 @@ describe("@jaykingson/vite-plus-base", () => {
 
   it("exposes workspace defaults", () => {
     expect(workspaceDefaults.staged).toEqual({ "*": "vp check --fix" });
-    expect(workspaceDefaults.run).toEqual({ cache: true });
+    expect(workspaceDefaults.run).toEqual({
+      cache: true,
+      tasks: {
+        bingo: {
+          command: ["vp exec vite-plus-base-bingo", "vp check --fix"],
+          cache: false,
+        },
+      },
+    });
     expect(workspaceDefaults.lint?.rules).toEqual({
       "vite-plus/prefer-vite-plus-imports": "error",
     });
@@ -126,9 +134,25 @@ describe("@jaykingson/vite-plus-base", () => {
   });
 
   it("defineWorkspaceConfig layers workspace defaults", async () => {
-    const config = await resolveConfig(defineWorkspaceConfig({ name: "example" }));
+    const config = await resolveConfig(
+      defineWorkspaceConfig({
+        bingo: {
+          blockPackageJson: {
+            name: "example",
+          },
+        },
+      }),
+    );
     expect(config.staged).toEqual({ "*": "vp check --fix" });
-    expect(config.run).toEqual({ cache: true });
+    expect(config.run).toEqual({
+      cache: true,
+      tasks: {
+        bingo: {
+          command: ["vp exec vite-plus-base-bingo", "vp check --fix"],
+          cache: false,
+        },
+      },
+    });
   });
 
   it("defineLibraryConfig layers library defaults", async () => {
@@ -141,9 +165,9 @@ describe("@jaykingson/vite-plus-base", () => {
 
 async function resolveConfig(
   config:
-    | UserConfig
-    | Promise<UserConfig>
-    | ((env: { command: string; mode: string }) => UserConfig | Promise<UserConfig>),
+    | ViteUserConfig
+    | Promise<ViteUserConfig>
+    | ((env: { command: string; mode: string }) => ViteUserConfig | Promise<ViteUserConfig>),
 ) {
   if (typeof config === "function") {
     return await config({ command: "build", mode: "production" });

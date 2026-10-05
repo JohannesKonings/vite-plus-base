@@ -10,7 +10,7 @@ pnpm add -D @jaykingson/vite-plus-base vite-plus
 
 ## Template (Bingo Stratum)
 
-This package ships a [Bingo Stratum](https://www.create.bingo/engines/stratum/concepts/blocks) template that adds `dependency-cruiser` to `devDependencies`, following the same block pattern as [create-typescript-app's `blockPackageJson`](https://github.com/JoshuaKGoldberg/create-typescript-app/blob/main/src/blocks/blockPackageJson.ts). Use it directly until [vite-plus transition mode](https://viteplus.dev/guide/create) is available.
+This package ships a [Bingo Stratum](https://www.create.bingo/engines/stratum/concepts/blocks) template that adds `dependency-cruiser` to `devDependencies`, installs [Matt Pocock's agent skills](https://github.com/mattpocock/skills) under `.agents/skills/`, and applies GitHub engineering setup docs in `docs/agents/`. Use it directly until [vite-plus transition mode](https://viteplus.dev/guide/create) is available.
 
 **First-time setup**:
 
@@ -22,21 +22,59 @@ pnpm exec vite-plus-base-template --mode setup --directory .
 
 ```bash
 pnpm update @jaykingson/vite-plus-base
-pnpm exec vite-plus-base-bingo
+vp run bingo
 ```
 
-`vite-plus-base-bingo` runs `vite-plus-base-template --mode transition --preset default --directory .`.
+`defineWorkspaceConfig` registers a `bingo` task that runs `vite-plus-base-bingo` (transition mode) and then `vp check --fix`.
 
 Without a local install:
 
 ```bash
 pnpm --package=@jaykingson/vite-plus-base dlx vite-plus-base-template --mode setup --directory .
-pnpm --package=@jaykingson/vite-plus-base dlx vite-plus-base-bingo
+pnpm --package=@jaykingson/vite-plus-base dlx vite-plus-base-bingo && vp check --fix
 ```
 
-The template merges `dependency-cruiser` into `package.json` and runs `vp install`. Re-run transition after upgrading to pick up version range changes.
+The template merges `dependency-cruiser` into `package.json`, installs Matt Pocock skills under `.agents/skills/`, writes GitHub issue-tracker setup to `docs/agents/`, patches `AGENTS.md`, and runs `vp install`. Re-run transition after upgrading to pick up version range changes and refresh the vendored skills snapshot.
 
 When vite-plus supports Bingo transition mode, the same template will work via `vp create` without changing the template itself.
+
+### Agent skills
+
+Skills from [mattpocock/skills](https://github.com/mattpocock/skills) are vendored into the template and emitted under `.agents/skills/<skill-name>/`. Transition mode also removes the legacy `.cursor/skills/` directory.
+
+GitHub engineering setup is applied automatically (no interactive prompts):
+
+- `docs/agents/issue-tracker.md` — GitHub Issues via `gh`
+- `docs/agents/triage-labels.md` — canonical triage labels
+- `docs/agents/domain.md` — domain doc consumer rules
+
+### Glossary map
+
+For monorepos, add a `glossaryMap` under `bingo.blockAgentSkills` in the root `vite.config.ts`. The template generates `GLOSSARY-MAP.md` from it on first setup; transition mode preserves an existing `GLOSSARY-MAP.md`, `docs/agents/*`, and custom `AGENTS.md` subsections.
+
+```ts
+export default defineWorkspaceConfig({
+  bingo: {
+    blockPackageJson: { name: "my-monorepo" },
+    blockAgentSkills: {
+      glossaryMap: {
+        root: { glossary: "GLOSSARY.md", adr: "docs/adr" },
+        "packages/app": { glossary: "packages/app/GLOSSARY.md" },
+      },
+    },
+  },
+});
+```
+
+### Maintainer: sync skills
+
+To refresh the vendored Matt Pocock skills snapshot after upstream changes:
+
+```bash
+vp run @jaykingson/vite-plus-base#sync-skills
+```
+
+This clones [mattpocock/skills](https://github.com/mattpocock/skills) at the pinned ref in `skills-lock.json` and updates `template/src/blocks/blockAgentSkills/vendored/`.
 
 ## Usage
 

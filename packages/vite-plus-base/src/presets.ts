@@ -1,6 +1,6 @@
-import type { UserConfig } from "vite-plus";
+import type { ViteUserConfig } from "vite-plus";
 
-export const sharedDefaults: UserConfig = {
+export const sharedDefaults: ViteUserConfig = {
   fmt: {},
   lint: {
     options: {
@@ -10,7 +10,7 @@ export const sharedDefaults: UserConfig = {
   },
 };
 
-export const workspaceDefaults: UserConfig = {
+export const workspaceDefaults: ViteUserConfig = {
   ...sharedDefaults,
   staged: {
     "*": "vp check --fix",
@@ -22,10 +22,16 @@ export const workspaceDefaults: UserConfig = {
   },
   run: {
     cache: true,
+    tasks: {
+      bingo: {
+        command: ["vp exec vite-plus-base-bingo", "vp check --fix"],
+        cache: false,
+      },
+    },
   },
 };
 
-export const libraryDefaults: UserConfig = {
+export const libraryDefaults: ViteUserConfig = {
   ...sharedDefaults,
   pack: {
     deps: {

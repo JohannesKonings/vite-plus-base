@@ -1,4 +1,4 @@
-import type { UserConfig } from "vite";
+import type { ViteUserConfig } from "vite-plus";
 
 type PlainObject = Record<string, unknown>;
 
@@ -46,6 +46,6 @@ function mergeConfigDeep(
   return result;
 }
 
-export function mergeConfig(base: UserConfig, override: UserConfig = {}): UserConfig {
-  return mergeConfigDeep(base as PlainObject, override as PlainObject) as UserConfig;
+export function mergeConfig(base: ViteUserConfig, override: ViteUserConfig = {}): ViteUserConfig {
+  return mergeConfigDeep(base as PlainObject, override as PlainObject) as ViteUserConfig;
 }

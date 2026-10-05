@@ -9,7 +9,9 @@
   },
   "devDependencies": {
     "@jaykingson/vite-plus-base": "workspace:*",
+    "@types/node": "catalog:",
     "dependency-cruiser": "^18.5.0",
+    "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },
