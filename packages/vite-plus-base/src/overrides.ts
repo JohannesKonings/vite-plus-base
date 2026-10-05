@@ -1,10 +1,10 @@
-import type { UserConfig } from "vite";
+import type { ViteUserConfig } from "vite-plus";
 
-type LintConfig = NonNullable<UserConfig["lint"]>;
+type LintConfig = NonNullable<ViteUserConfig["lint"]>;
 type LintOverrideEntry = NonNullable<LintConfig["overrides"]>[number];
 export type LintPreset = Omit<LintOverrideEntry, "files">;
 
-type FmtConfig = NonNullable<UserConfig["fmt"]>;
+type FmtConfig = NonNullable<ViteUserConfig["fmt"]>;
 type FmtOverrideEntry = NonNullable<FmtConfig["overrides"]>[number];
 
 function normalizeFiles(files: string | string[]): string[] {

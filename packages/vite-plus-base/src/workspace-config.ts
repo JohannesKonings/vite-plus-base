@@ -1,5 +1,5 @@
-import type { UserConfig } from "vite";
+import type { ViteUserConfig } from "vite-plus";
 
-export type WorkspaceConfig = UserConfig & {
+export type WorkspaceConfig = ViteUserConfig & {
   name: string;
 };

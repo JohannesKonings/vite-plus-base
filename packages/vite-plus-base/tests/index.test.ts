@@ -1,4 +1,4 @@
-import type { UserConfig } from "vite";
+import type { ViteUserConfig } from "vite-plus";
 import { describe, expect, it } from "vite-plus/test";
 import {
   defineConfig,
@@ -141,9 +141,9 @@ describe("@jaykingson/vite-plus-base", () => {
 
 async function resolveConfig(
   config:
-    | UserConfig
-    | Promise<UserConfig>
-    | ((env: { command: string; mode: string }) => UserConfig | Promise<UserConfig>),
+    | ViteUserConfig
+    | Promise<ViteUserConfig>
+    | ((env: { command: string; mode: string }) => ViteUserConfig | Promise<ViteUserConfig>),
 ) {
   if (typeof config === "function") {
     return await config({ command: "build", mode: "production" });
