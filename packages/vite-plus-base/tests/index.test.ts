@@ -102,7 +102,15 @@ describe("@jaykingson/vite-plus-base", () => {
 
   it("exposes workspace defaults", () => {
     expect(workspaceDefaults.staged).toEqual({ "*": "vp check --fix" });
-    expect(workspaceDefaults.run).toEqual({ cache: true });
+    expect(workspaceDefaults.run).toEqual({
+      cache: true,
+      tasks: {
+        bingo: {
+          command: ["vp exec vite-plus-base-bingo", "vp check --fix"],
+          cache: false,
+        },
+      },
+    });
     expect(workspaceDefaults.lint?.rules).toEqual({
       "vite-plus/prefer-vite-plus-imports": "error",
     });
@@ -136,7 +144,15 @@ describe("@jaykingson/vite-plus-base", () => {
       }),
     );
     expect(config.staged).toEqual({ "*": "vp check --fix" });
-    expect(config.run).toEqual({ cache: true });
+    expect(config.run).toEqual({
+      cache: true,
+      tasks: {
+        bingo: {
+          command: ["vp exec vite-plus-base-bingo", "vp check --fix"],
+          cache: false,
+        },
+      },
+    });
   });
 
   it("defineLibraryConfig layers library defaults", async () => {

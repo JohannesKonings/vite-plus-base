@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { formatPackageJson, mergeDevDependencies } from "../template/src/blocks/package-json.ts";
+import {
+  formatPackageJson,
+  mergeDevDependencies,
+} from "../template/src/blocks/blockPackageJson/package-json.ts";
 
 describe("package-json helpers", () => {
   it("merges devDependencies without removing existing entries", () => {

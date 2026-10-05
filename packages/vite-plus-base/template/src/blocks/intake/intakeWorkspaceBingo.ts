@@ -1,9 +1,11 @@
 import {
   bingoConfigSchema,
+  blockAgentSkillsConfigSchema,
   blockPackageJsonConfigSchema,
   type BingoConfig,
 } from "../../../../src/workspace-config.ts";
 import { intakeFile } from "./intakeFile.ts";
+import { parseGlossaryMap } from "./parseGlossaryMap.ts";
 
 function extractBracedObject(source: string, openBraceIndex: number): string | undefined {
   let depth = 0;
@@ -48,6 +50,21 @@ function parseStringProperty(literal: string, property: string): string | undefi
   return match?.[1];
 }
 
+function parseBlockAgentSkills(literal: string | undefined) {
+  if (!literal) {
+    return undefined;
+  }
+
+  const glossaryMapLiteral = extractPropertyObject(literal, "glossaryMap");
+  if (!glossaryMapLiteral) {
+    return blockAgentSkillsConfigSchema.parse({});
+  }
+
+  return blockAgentSkillsConfigSchema.parse({
+    glossaryMap: parseGlossaryMap(glossaryMapLiteral),
+  });
+}
+
 export function intakeWorkspaceBingo(files: Record<string, unknown>): BingoConfig | undefined {
   const result = intakeFile(files, ["vite.config.ts"]);
   if (!result) {
@@ -74,5 +91,10 @@ export function intakeWorkspaceBingo(files: Record<string, unknown>): BingoConfi
     name: parseStringProperty(blockPackageJsonLiteral, "name"),
   });
 
-  return bingoConfigSchema.parse({ blockPackageJson });
+  const blockAgentSkillsLiteral = extractPropertyObject(bingoLiteral, "blockAgentSkills");
+
+  return bingoConfigSchema.parse({
+    blockPackageJson,
+    blockAgentSkills: parseBlockAgentSkills(blockAgentSkillsLiteral),
+  });
 }

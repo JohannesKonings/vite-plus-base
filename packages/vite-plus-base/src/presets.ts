@@ -22,6 +22,12 @@ export const workspaceDefaults: ViteUserConfig = {
   },
   run: {
     cache: true,
+    tasks: {
+      bingo: {
+        command: ["vp exec vite-plus-base-bingo", "vp check --fix"],
+        cache: false,
+      },
+    },
   },
 };
 

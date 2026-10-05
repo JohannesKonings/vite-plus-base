@@ -5,7 +5,7 @@ export default base.createStratumTemplate({
   about: {
     name: "@jaykingson/vite-plus-base",
     description:
-      "Add dependency-cruiser, TypeScript, project config, agent skills, and VS Code workspace settings for vite-plus-base projects.",
+      "Add dependency-cruiser, Matt Pocock agent skills, TypeScript, GitHub engineering setup, and VS Code workspace settings for vite-plus-base projects.",
   },
   presets: [presetDefault],
 });

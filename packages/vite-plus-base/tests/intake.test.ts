@@ -2,6 +2,7 @@ import { describe, expect, it } from "vite-plus/test";
 
 import { intakeFileAsJson } from "../template/src/blocks/intake/intakeFileAsJson.ts";
 import { intakeWorkspaceBingo } from "../template/src/blocks/intake/intakeWorkspaceBingo.ts";
+import { intakeWorkspaceConfig } from "../template/src/blocks/intake/intakeWorkspaceConfig.ts";
 
 describe("intake helpers", () => {
   it("reads package.json from bingo directory intake tuples", () => {
@@ -65,6 +66,43 @@ export default defineWorkspaceConfig({
     ).toEqual({
       blockPackageJson: {
         name: "my-monorepo",
+      },
+    });
+  });
+
+  it("parses glossaryMap from bingo.blockAgentSkills in vite.config.ts", () => {
+    expect(
+      intakeWorkspaceConfig({
+        "vite.config.ts": `import { defineWorkspaceConfig } from "@jaykingson/vite-plus-base";
+
+export default defineWorkspaceConfig({
+  bingo: {
+    blockPackageJson: {
+      name: "my-monorepo",
+    },
+    blockAgentSkills: {
+      glossaryMap: {
+        root: {
+          glossary: "GLOSSARY.md",
+          adr: "docs/adr",
+        },
+        "packages/app": {
+          glossary: "packages/app/GLOSSARY.md",
+        },
+      },
+    },
+  },
+});`,
+      }),
+    ).toEqual({
+      glossaryMap: {
+        root: {
+          glossary: "GLOSSARY.md",
+          adr: "docs/adr",
+        },
+        "packages/app": {
+          glossary: "packages/app/GLOSSARY.md",
+        },
       },
     });
   });

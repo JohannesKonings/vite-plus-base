@@ -1,6 +1,6 @@
 {
   "name": "@jaykingson/vite-plus-base",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Opinionated vite-plus config wrapper for apps and libraries.",
   "license": "MIT",
   "bin": {
@@ -21,7 +21,8 @@
     "dev": "vp pack --watch",
     "test": "vp test",
     "check": "vp check",
-    "prepublishOnly": "vp run build"
+    "prepublishOnly": "vp run build",
+    "sync-skills": "node --experimental-strip-types scripts/sync-matt-pocock-skills.mts"
   },
   "dependencies": {
     "bingo": "catalog:",

@@ -9,8 +9,20 @@ export type { LintPreset } from "./overrides.ts";
 export { defineLintPreset, fmtOverride, lintOverride } from "./overrides.ts";
 export { mergeConfig } from "./merge-config.ts";
 export { libraryDefaults, sharedDefaults, workspaceDefaults } from "./presets.ts";
-export { bingoConfigSchema, blockPackageJsonConfigSchema } from "./workspace-config.ts";
-export type { BingoConfig, BlockPackageJsonConfig, WorkspaceConfig } from "./workspace-config.ts";
+export {
+  bingoConfigSchema,
+  blockAgentSkillsConfigSchema,
+  blockPackageJsonConfigSchema,
+  glossaryMapEntrySchema,
+  glossaryMapSchema,
+} from "./workspace-config.ts";
+export type {
+  BingoConfig,
+  BlockAgentSkillsConfig,
+  BlockPackageJsonConfig,
+  GlossaryMapEntry,
+  WorkspaceConfig,
+} from "./workspace-config.ts";
 
 export function defineConfig(config: ViteUserConfig = {}) {
   return vpDefineConfig(mergeConfig(sharedDefaults, config));

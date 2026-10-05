@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { base } from "../base.ts";
 import { getPackageDependencies } from "../data/packageData.ts";
-import { blockPackageJson } from "./blockPackageJson.ts";
+import { blockPackageJson } from "./blockPackageJson/blockPackageJson.ts";
 import { intakeFileAsJson } from "./intake/intakeFileAsJson.ts";
 
 function typescriptPackageJsonAddon(packageData: Record<string, unknown> | undefined) {
