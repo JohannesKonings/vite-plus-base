@@ -2,7 +2,7 @@
  * PROTOTYPE — CI workflow (#4): one Check job, PR + push main, concurrency on PR only.
  */
 import { createMultiWorkflowFile } from "../../files/createMultiWorkflowFile.ts";
-import type { WorkspaceShape } from "../detectWorkspaceShape.ts";
+import type { WorkspaceShape } from "../../intake/detectWorkspaceShape.ts";
 
 function verificationSteps(workspaceShape: WorkspaceShape) {
   const testCommand = workspaceShape === "package-workspace" ? "vp run -r test" : "vp test";

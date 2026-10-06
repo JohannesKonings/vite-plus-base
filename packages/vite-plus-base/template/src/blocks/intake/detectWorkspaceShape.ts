@@ -1,6 +1,3 @@
-/**
- * PROTOTYPE — decides vp test/build vs vp run -r test/build (#4).
- */
 export type WorkspaceShape = "single-package" | "package-workspace";
 
 export function detectWorkspaceShape(files: Record<string, unknown>): WorkspaceShape {

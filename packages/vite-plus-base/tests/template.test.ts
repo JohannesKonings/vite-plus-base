@@ -622,6 +622,70 @@ Custom status surfaces section.
     ).toContain("npm trusted publishing");
   });
 
+  it("emits minimum release age policy in setup mode for single-package repos", async () => {
+    const creation = await produceTemplate(stratumTemplate, {
+      mode: "setup",
+      options: templateOptions,
+      files: {
+        "package.json": existingPackageJson,
+      },
+    } as unknown as Parameters<typeof produceTemplate>[1]);
+
+    const renovateJson = JSON.parse(creation.files?.["renovate.json"] as string);
+    expect(renovateJson).toEqual({
+      $schema: "https://docs.renovatebot.com/renovate-schema.json",
+      extends: ["config:recommended"],
+      minimumReleaseAge: "2 days",
+      vulnerabilityAlerts: { enabled: true },
+    });
+    expect(creation.files?.["pnpm-workspace.yaml"]).toBe(
+      "minimumReleaseAge: 2880\nminimumReleaseAgeStrict: true\n",
+    );
+    expect(creation.files?.["dependabot.yml"]).toBeUndefined();
+  });
+
+  it("merges minimum release age into existing pnpm-workspace.yaml for package workspaces", async () => {
+    const creation = await produceTemplate(stratumTemplate, {
+      mode: "setup",
+      options: templateOptions,
+      files: {
+        "package.json": existingPackageJson,
+        "pnpm-workspace.yaml": "packages:\n  - packages/*\n",
+      },
+    } as unknown as Parameters<typeof produceTemplate>[1]);
+
+    expect(creation.files?.["pnpm-workspace.yaml"]).toBe(
+      "minimumReleaseAge: 2880\nminimumReleaseAgeStrict: true\n\npackages:\n  - packages/*\n",
+    );
+    expect(JSON.parse(creation.files?.["renovate.json"] as string).minimumReleaseAge).toBe(
+      "2 days",
+    );
+  });
+
+  it("overwrites stale minimum release age settings during transition", async () => {
+    const creation = await produceTemplate(stratumTemplate, {
+      mode: "transition",
+      options: templateOptions,
+      files: {
+        "package.json": existingPackageJson,
+        "renovate.json": JSON.stringify({
+          extends: ["config:recommended"],
+          minimumReleaseAge: "7 days",
+          vulnerabilityAlerts: false,
+        }),
+        "pnpm-workspace.yaml":
+          "minimumReleaseAge: 10080\nminimumReleaseAgeStrict: false\npackages:\n  - packages/*\n",
+      },
+    } as unknown as Parameters<typeof produceTemplate>[1]);
+
+    const renovateJson = JSON.parse(creation.files?.["renovate.json"] as string);
+    expect(renovateJson.minimumReleaseAge).toBe("2 days");
+    expect(renovateJson.vulnerabilityAlerts).toEqual({ enabled: true });
+    expect(creation.files?.["pnpm-workspace.yaml"]).toBe(
+      "minimumReleaseAge: 2880\nminimumReleaseAgeStrict: true\n\npackages:\n  - packages/*\n",
+    );
+  });
+
   it("preserves catalog TypeScript dependencies during transition", async () => {
     const packageJsonWithCatalog = JSON.stringify({
       ...JSON.parse(existingPackageJson),

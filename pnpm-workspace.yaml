@@ -1,8 +1,9 @@
+minimumReleaseAge: 2880
+minimumReleaseAgeStrict: true
+
 packages:
   - packages/*
-
 catalogMode: prefer
-
 catalog:
   "@types/node": ^24
   bingo: ^0.9.3

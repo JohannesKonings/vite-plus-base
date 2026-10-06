@@ -137,6 +137,13 @@ export async function listExtraTransitionIntakePaths(directory: string): Promise
     // no workspace file
   }
 
+  try {
+    await access(path.join(directory, "renovate.json"));
+    paths.push("renovate.json");
+  } catch {
+    // no renovate config
+  }
+
   for (const packageJsonPath of await listWorkspacePackageJsonPaths(directory)) {
     paths.push(packageJsonPath);
   }

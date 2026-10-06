@@ -1,6 +1,6 @@
 import { createSoloWorkflowFile } from "../../files/createSoloWorkflowFile.ts";
 import type { PackageManifest } from "../detectPublishablePackages.ts";
-import type { WorkspaceShape } from "../detectWorkspaceShape.ts";
+import type { WorkspaceShape } from "../../intake/detectWorkspaceShape.ts";
 import { DEFAULT_BRANCH } from "../constants.ts";
 
 function verificationSteps(workspaceShape: WorkspaceShape) {
