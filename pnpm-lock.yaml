@@ -183,8 +183,8 @@ catalogs:
       specifier: 1.0.0
       version: 1.0.0
     zod:
-      specifier: ^3.25.76
-      version: 3.25.76
+      specifier: ^4.0.0
+      version: 4.6.5
 
 overrides:
   vite@*: npm:@voidzero-dev/vite-plus-core@1.0.0
@@ -222,10 +222,10 @@ importers:
         version: 0.9.3
       bingo-stratum:
         specifier: 'catalog:'
-        version: 0.7.1(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.9.3)(zod@3.25.76)
+        version: 0.7.1(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.9.3)(zod@4.6.5)
       zod:
         specifier: 'catalog:'
-        version: 3.25.76
+        version: 4.6.5
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -2082,6 +2082,9 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
+  zod@4.6.5:
+    resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
+
 snapshots:
 
   '@babel/code-frame@7.29.7':
@@ -2752,7 +2755,7 @@ snapshots:
     dependencies:
       '@octokit/types': 16.0.0
 
-  bingo-stratum@0.7.1(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.9.3)(zod@3.25.76):
+  bingo-stratum@0.7.1(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.9.3)(zod@4.6.5):
     dependencies:
       all-properties-lazy: 0.1.0
       bingo: 0.9.3
@@ -2763,7 +2766,7 @@ snapshots:
       octokit: 5.0.5
       slugify: 1.6.9
       without-undefined-properties: 0.1.2
-      zod: 3.25.76
+      zod: 4.6.5
 
   bingo-systems@0.5.5:
     dependencies:
@@ -3512,3 +3515,5 @@ snapshots:
       '@yuku-parser/binding-win32-x64': 0.9.5
 
   zod@3.25.76: {}
+
+  zod@4.6.5: {}
