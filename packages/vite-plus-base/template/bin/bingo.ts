@@ -72,5 +72,9 @@ process.exitCode = await runInsideClackDisplay(templatePackageData, async (displ
     return { status: CLIStatus.Error, outro: CLIMessage.Leaving };
   }
 
-  return { status: CLIStatus.Success, outro: CLIMessage.Done };
+  return {
+    status: CLIStatus.Success,
+    outro: CLIMessage.Done,
+    suggestions: creation.suggestions,
+  };
 });
