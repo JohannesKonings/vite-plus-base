@@ -636,7 +636,7 @@ Custom status surfaces section.
       $schema: "https://docs.renovatebot.com/renovate-schema.json",
       extends: ["config:recommended"],
       minimumReleaseAge: "2 days",
-      vulnerabilityAlerts: true,
+      vulnerabilityAlerts: { enabled: true },
     });
     expect(creation.files?.["pnpm-workspace.yaml"]).toBe(
       "minimumReleaseAge: 2880\nminimumReleaseAgeStrict: true\n",
@@ -680,7 +680,7 @@ Custom status surfaces section.
 
     const renovateJson = JSON.parse(creation.files?.["renovate.json"] as string);
     expect(renovateJson.minimumReleaseAge).toBe("2 days");
-    expect(renovateJson.vulnerabilityAlerts).toBe(true);
+    expect(renovateJson.vulnerabilityAlerts).toEqual({ enabled: true });
     expect(creation.files?.["pnpm-workspace.yaml"]).toBe(
       "minimumReleaseAge: 2880\nminimumReleaseAgeStrict: true\n\npackages:\n  - packages/*\n",
     );

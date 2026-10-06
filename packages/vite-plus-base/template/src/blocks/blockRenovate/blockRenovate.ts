@@ -8,7 +8,7 @@ function createRenovateJson() {
         $schema: "https://docs.renovatebot.com/renovate-schema.json",
         extends: ["config:recommended"],
         minimumReleaseAge: MINIMUM_RELEASE_AGE_RENOVATE,
-        vulnerabilityAlerts: true,
+        vulnerabilityAlerts: { enabled: true },
       },
       null,
       2,
