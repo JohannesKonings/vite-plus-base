@@ -3,6 +3,8 @@ import { access, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 
+import { listExtraTransitionIntakePaths } from "./listWorkspaceIntakePaths.ts";
+
 const execFileAsync = promisify(execFile);
 
 type IntakeFileEntry = [string] | [string, { executable?: boolean }];
@@ -69,7 +71,7 @@ async function isGitIgnored(directory: string, relativePath: string) {
 }
 
 async function listTransitionPaths(directory: string) {
-  const paths: string[] = [];
+  const paths = new Set<string>(await listExtraTransitionIntakePaths(directory));
 
   for (const relativePath of TRANSITION_INTAKE_PATHS) {
     try {
@@ -82,10 +84,10 @@ async function listTransitionPaths(directory: string) {
       continue;
     }
 
-    paths.push(relativePath);
+    paths.add(relativePath);
   }
 
-  return paths;
+  return [...paths];
 }
 
 export async function intakeForTransition(directory = "."): Promise<IntakeDirectory> {

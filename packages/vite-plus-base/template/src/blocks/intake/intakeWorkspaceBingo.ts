@@ -1,6 +1,7 @@
 import {
   bingoConfigSchema,
   blockAgentSkillsConfigSchema,
+  blockGitHubActionsCIConfigSchema,
   blockPackageJsonConfigSchema,
   type BingoConfig,
 } from "../../../../src/workspace-config.ts";
@@ -50,6 +51,26 @@ function parseStringProperty(literal: string, property: string): string | undefi
   return match?.[1];
 }
 
+function parseBooleanProperty(literal: string, property: string): boolean | undefined {
+  const match = literal.match(new RegExp(`\\b${property}:\\s*(true|false)`));
+  return match ? match[1] === "true" : undefined;
+}
+
+function parseBlockGitHubActionsCI(literal: string | undefined) {
+  if (!literal) {
+    return undefined;
+  }
+
+  const auth = parseStringProperty(literal, "auth");
+  const parsedAuth = auth === "oidc" || auth === "token" ? auth : undefined;
+
+  return blockGitHubActionsCIConfigSchema.parse({
+    emitRelease: parseBooleanProperty(literal, "emitRelease"),
+    auth: parsedAuth,
+    npmEnvironment: parseStringProperty(literal, "npmEnvironment"),
+  });
+}
+
 function parseBlockAgentSkills(literal: string | undefined) {
   if (!literal) {
     return undefined;
@@ -92,9 +113,11 @@ export function intakeWorkspaceBingo(files: Record<string, unknown>): BingoConfi
   });
 
   const blockAgentSkillsLiteral = extractPropertyObject(bingoLiteral, "blockAgentSkills");
+  const blockGitHubActionsCILiteral = extractPropertyObject(bingoLiteral, "blockGitHubActionsCI");
 
   return bingoConfigSchema.parse({
     blockPackageJson,
     blockAgentSkills: parseBlockAgentSkills(blockAgentSkillsLiteral),
+    blockGitHubActionsCI: parseBlockGitHubActionsCI(blockGitHubActionsCILiteral),
   });
 }

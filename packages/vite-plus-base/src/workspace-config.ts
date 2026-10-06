@@ -18,13 +18,21 @@ export const blockAgentSkillsConfigSchema = z.object({
   glossaryMap: glossaryMapSchema.optional(),
 });
 
+export const blockGitHubActionsCIConfigSchema = z.object({
+  emitRelease: z.boolean().optional(),
+  auth: z.enum(["oidc", "token"]).optional(),
+  npmEnvironment: z.string().optional(),
+});
+
 export const bingoConfigSchema = z.object({
   blockPackageJson: blockPackageJsonConfigSchema,
   blockAgentSkills: blockAgentSkillsConfigSchema.optional(),
+  blockGitHubActionsCI: blockGitHubActionsCIConfigSchema.optional(),
 });
 
 export type BlockPackageJsonConfig = z.infer<typeof blockPackageJsonConfigSchema>;
 export type BlockAgentSkillsConfig = z.infer<typeof blockAgentSkillsConfigSchema>;
+export type BlockGitHubActionsCIConfig = z.infer<typeof blockGitHubActionsCIConfigSchema>;
 export type BingoConfig = z.infer<typeof bingoConfigSchema>;
 export type GlossaryMapEntry = z.infer<typeof glossaryMapEntrySchema>;
 

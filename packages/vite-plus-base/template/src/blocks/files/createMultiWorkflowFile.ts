@@ -26,7 +26,7 @@ export function createMultiWorkflowFile({
   return formatWorkflowYaml({
     name,
     on: {
-      pull_request: null,
+      pull_request: {},
       push: { branches: ["main"] },
     },
     concurrency,

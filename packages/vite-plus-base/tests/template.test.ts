@@ -544,6 +544,84 @@ Custom status surfaces section.
     });
   });
 
+  it("emits GitHub Actions CI workflows in setup mode", async () => {
+    const creation = await produceTemplate(stratumTemplate, {
+      mode: "setup",
+      options: templateOptions,
+      files: {
+        "package.json": existingPackageJson,
+      },
+    } as unknown as Parameters<typeof produceTemplate>[1]);
+
+    const ciWorkflow = readNestedFile(creation.files as Record<string, unknown>, [
+      ".github",
+      "workflows",
+      "ci.yaml",
+    ]);
+    const prepareAction = readNestedFile(creation.files as Record<string, unknown>, [
+      ".github",
+      "actions",
+      "prepare",
+      "action.yaml",
+    ]);
+
+    expect(ciWorkflow).toContain("name: CI");
+    expect(ciWorkflow).toContain("uses: ./.github/actions/prepare");
+    expect(ciWorkflow).toContain("vp install --frozen-lockfile");
+    expect(ciWorkflow).toContain("vp check");
+    expect(ciWorkflow).toContain("vp test");
+    expect(ciWorkflow).toContain("vp build");
+    expect(ciWorkflow).not.toContain("pnpm/action-setup");
+    expect(prepareAction).toContain("voidzero-dev/setup-vp@v1.21.1");
+    expect(prepareAction).toContain('cache: "true"');
+    expect(prepareAction).toContain('run-install: "false"');
+    expect(
+      readNestedFile(creation.files as Record<string, unknown>, [
+        ".github",
+        "workflows",
+        "release.yaml",
+      ]),
+    ).toBeUndefined();
+  });
+
+  it("emits release workflow for publishable workspace packages", async () => {
+    const creation = await produceTemplate(stratumTemplate, {
+      mode: "setup",
+      options: templateOptions,
+      files: {
+        "package.json": existingPackageJson,
+        "pnpm-workspace.yaml": "packages:\n  - packages/*\n",
+        packages: {
+          lib: {
+            "package.json": JSON.stringify({
+              name: "@acme/lib",
+              version: "1.0.0",
+              exports: { ".": "./dist/index.mjs" },
+              scripts: { build: "vp pack" },
+            }),
+          },
+        },
+      },
+    } as unknown as Parameters<typeof produceTemplate>[1]);
+
+    const releaseWorkflow = readNestedFile(creation.files as Record<string, unknown>, [
+      ".github",
+      "workflows",
+      "release.yaml",
+    ]);
+
+    expect(releaseWorkflow).toContain("id-token: write");
+    expect(releaseWorkflow).toContain("Publish @acme/lib");
+    expect(releaseWorkflow).toContain("pnpm publish --no-git-checks --access public");
+    expect(
+      readNestedFile(creation.files as Record<string, unknown>, [
+        "docs",
+        "agents",
+        "ci-release.md",
+      ]),
+    ).toContain("npm trusted publishing");
+  });
+
   it("preserves catalog TypeScript dependencies during transition", async () => {
     const packageJsonWithCatalog = JSON.stringify({
       ...JSON.parse(existingPackageJson),

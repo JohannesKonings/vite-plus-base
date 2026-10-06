@@ -9,6 +9,7 @@ export function createSoloWorkflowFile({
   on,
   concurrency,
   permissions,
+  environment,
   steps,
   jobName,
 }: {
@@ -16,6 +17,7 @@ export function createSoloWorkflowFile({
   on: Record<string, unknown>;
   concurrency?: Record<string, string>;
   permissions?: Record<string, string>;
+  environment?: string;
   steps: Array<Record<string, unknown>>;
   jobName?: string;
 }) {
@@ -28,6 +30,7 @@ export function createSoloWorkflowFile({
     jobs: {
       [id]: {
         ...(jobName && { name: jobName }),
+        ...(environment && { environment }),
         permissions,
         "runs-on": "ubuntu-latest",
         steps,

@@ -1,7 +1,3 @@
-/**
- * PROTOTYPE — release workflow (#6): publish committed versions on push to main.
- * Reuses same verification steps as CI, then publishes each publishable package.
- */
 import { createSoloWorkflowFile } from "../../files/createSoloWorkflowFile.ts";
 import type { PackageManifest } from "../detectPublishablePackages.ts";
 import type { WorkspaceShape } from "../detectWorkspaceShape.ts";
@@ -21,18 +17,39 @@ function verificationSteps(workspaceShape: WorkspaceShape) {
   ];
 }
 
+function createPublishStep(pkg: PackageManifest) {
+  const packageName = pkg.name ?? pkg.path;
+  const script = [
+    "VERSION=$(node -p \"require('./package.json').version\")",
+    `if pnpm view "${packageName}@\${VERSION}" version 2>/dev/null; then`,
+    '  echo "Already published, skipping"',
+    "else",
+    "  pnpm publish --no-git-checks --access public",
+    "fi",
+  ].join("\n");
+
+  const step: Record<string, string> = {
+    name: `Publish ${packageName}`,
+    run: script,
+  };
+
+  if (pkg.path !== ".") {
+    step["working-directory"] = pkg.path;
+  }
+
+  return step;
+}
+
 export function createReleaseWorkflow({
   workspaceShape,
   publishablePackages,
+  npmEnvironment,
 }: {
   workspaceShape: WorkspaceShape;
   publishablePackages: PackageManifest[];
+  npmEnvironment?: string;
 }) {
-  // TODO: emit per-package publish steps with skip-if-already-on-registry guard (#6)
-  const publishSteps = publishablePackages.map((pkg) => ({
-    name: `Publish ${pkg.name ?? pkg.path}`,
-    run: `# pnpm publish from ${pkg.path} — auth TBD in #10`,
-  }));
+  const publishSteps = publishablePackages.map((pkg) => createPublishStep(pkg));
 
   return createSoloWorkflowFile({
     name: "Release",
@@ -40,8 +57,9 @@ export function createReleaseWorkflow({
     concurrency: { group: "${{ github.workflow }}" },
     permissions: {
       contents: "read",
-      "id-token": "write", // npm OIDC — details in #10
+      "id-token": "write",
     },
+    environment: npmEnvironment,
     steps: [...verificationSteps(workspaceShape), ...publishSteps],
   });
 }

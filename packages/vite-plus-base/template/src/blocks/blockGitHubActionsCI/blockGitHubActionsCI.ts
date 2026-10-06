@@ -1,6 +1,3 @@
-/**
- * PROTOTYPE — rough block outline for #9. Not production-ready.
- */
 import { z } from "zod";
 
 import { base } from "../../base.ts";
@@ -10,6 +7,7 @@ import { intakeFileAsJson } from "../intake/intakeFileAsJson.ts";
 import { intakeWorkspaceBingo } from "../intake/intakeWorkspaceBingo.ts";
 import { createPrepareAction } from "./actions/createPrepareAction.ts";
 import { DEFAULT_SETUP_VP_VERSION } from "./constants.ts";
+import { createCiReleaseDoc } from "./docs/createCiReleaseDoc.ts";
 import { detectPublishablePackages, type PackageManifest } from "./detectPublishablePackages.ts";
 import { detectWorkspaceShape, type WorkspaceShape } from "./detectWorkspaceShape.ts";
 import { createCiWorkflow } from "./workflows/createCiWorkflow.ts";
@@ -32,6 +30,8 @@ function blockGitHubActionsCICreation({
 }: {
   addons: {
     emitRelease?: boolean;
+    auth?: "oidc" | "token";
+    npmEnvironment?: string;
     setupVpVersion?: string;
     extraJobs?: z.infer<typeof zExtraJob>[];
     existingCiWorkflow?: string;
@@ -51,7 +51,11 @@ function blockGitHubActionsCICreation({
     extraJobs: addons.extraJobs,
   });
   const releaseWorkflow = emitRelease
-    ? createReleaseWorkflow({ workspaceShape, publishablePackages })
+    ? createReleaseWorkflow({
+        workspaceShape,
+        publishablePackages,
+        npmEnvironment: addons.npmEnvironment,
+      })
     : undefined;
 
   const workflowFiles: Record<string, string> = {
@@ -76,9 +80,20 @@ function blockGitHubActionsCICreation({
         },
         workflows: workflowFiles,
       },
+      ...(emitRelease
+        ? {
+            docs: {
+              agents: {
+                "ci-release.md": createCiReleaseDoc(),
+              },
+            },
+          }
+        : {}),
     },
     suggestions: emitRelease
-      ? ["Configure npm trusted publishing for this repository (see docs/agents/ci-release.md)."]
+      ? [
+          "Configure npm trusted publishing for each publishable package (see docs/agents/ci-release.md).",
+        ]
       : [],
   };
 }
@@ -89,6 +104,8 @@ export const blockGitHubActionsCI = base.createBlock({
   },
   addons: {
     emitRelease: z.boolean().optional(),
+    auth: z.enum(["oidc", "token"]).optional(),
+    npmEnvironment: z.string().optional(),
     setupVpVersion: z.string().optional(),
     extraJobs: z.array(zExtraJob).optional(),
     existingCiWorkflow: z.string().optional(),
@@ -117,12 +134,12 @@ export const blockGitHubActionsCI = base.createBlock({
       intakeFile(files, [".github", "workflows", "release.yaml"]) ??
       intakeFile(files, [".github", "workflows", "release.yml"]);
     const workspaceBingo = intakeWorkspaceBingo(files);
-    const blockConfig = (
-      workspaceBingo as { blockGitHubActionsCI?: { emitRelease?: boolean } } | undefined
-    )?.blockGitHubActionsCI;
+    const blockConfig = workspaceBingo?.blockGitHubActionsCI;
 
     return {
       emitRelease: blockConfig?.emitRelease,
+      auth: blockConfig?.auth,
+      npmEnvironment: blockConfig?.npmEnvironment,
       existingCiWorkflow: existingCi?.[0],
       existingReleaseWorkflow: existingRelease?.[0],
       workspaceShape: detectWorkspaceShape(files),
