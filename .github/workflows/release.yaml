@@ -1,0 +1,29 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+concurrency:
+  group: "${{ github.workflow }}"
+jobs:
+  release:
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/prepare
+      - run: vp install --frozen-lockfile
+      - run: vp check
+      - run: vp run -r test
+      - run: vp run -r build
+      - name: "Publish @jaykingson/vite-plus-base"
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if pnpm view "@jaykingson/vite-plus-base@${VERSION}" version 2>/dev/null; then
+            echo "Already published, skipping"
+          else
+            pnpm publish --no-git-checks --access public
+          fi
+        working-directory: packages/vite-plus-base

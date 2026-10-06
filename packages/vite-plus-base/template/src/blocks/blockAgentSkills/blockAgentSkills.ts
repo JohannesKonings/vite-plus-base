@@ -17,11 +17,10 @@ const DEPENDENCY_CRUISER_VERSION = "^18.5.0";
 export const DEPENDENCY_CRUISER_CONFIG_PATH = ".dependency-cruiser.cjs";
 
 /**
- * Basenames from older template versions.
- * Transition deletes every match, including nested copies such as
- * `packages/vite-plus-base/dependency-cruiser.cjs`.
+ * Template-owned dependency-cruiser configs. Transition deletes every match.
+ * Users create a repo-specific config via the setup-ts-deep-modules skill.
  */
-export const OUTDATED_TEMPLATE_FILES = ["dependency-cruiser.cjs"];
+export const OUTDATED_TEMPLATE_FILES = ["dependency-cruiser.cjs", ".dependency-cruiser.cjs"];
 const LEGACY_CURSOR_SKILLS_PATH = ".cursor/skills";
 
 const glossaryMapAddonSchema = z
@@ -127,7 +126,9 @@ function blockAgentSkillsCreation({
   const files = {
     ...buildAgentSetupFiles(addons, preserveDocs),
     ...vendoredSkillFiles(),
-    [DEPENDENCY_CRUISER_CONFIG_PATH]: projectDependencyCruiserConfig,
+    ...(mode === "produce"
+      ? { [DEPENDENCY_CRUISER_CONFIG_PATH]: projectDependencyCruiserConfig }
+      : {}),
     ...(agentsMd ? { "AGENTS.md": agentsMd } : {}),
     ...(glossaryMap && !(preserveDocs && addons.glossaryMapMd)
       ? { "GLOSSARY-MAP.md": formatGlossaryMap(glossaryMap) }

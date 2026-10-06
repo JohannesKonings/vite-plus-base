@@ -64,6 +64,12 @@ const existingPackageJson = JSON.stringify({
     packageManager: {
       name: "pnpm",
       version: "12.9.1",
+      onFail: "download",
+    },
+    runtime: {
+      name: "node",
+      version: "^24.0.0",
+      onFail: "download",
     },
   },
   engines: {
@@ -103,6 +109,12 @@ describe("vite-plus-base-template", () => {
         packageManager: {
           name: "pnpm",
           version: "12.9.1",
+          onFail: "download",
+        },
+        runtime: {
+          name: "node",
+          version: "^24.0.0",
+          onFail: "download",
         },
       },
       engines: {
@@ -190,13 +202,14 @@ describe("vite-plus-base-template", () => {
     expect(pkg.devDependencies?.vite).toBe("catalog:");
   });
 
-  it("removes outdated dependency-cruiser.cjs during transition", async () => {
+  it("removes template-owned dependency-cruiser configs during transition", async () => {
     const creation = await produceTemplate(stratumTemplate, {
       mode: "transition",
       options: templateOptions,
       files: {
         "package.json": existingPackageJson,
         "dependency-cruiser.cjs": "module.exports = { options: {} };",
+        ".dependency-cruiser.cjs": projectDependencyCruiserConfig,
       },
     } as unknown as Parameters<typeof produceTemplate>[1]);
 
@@ -206,9 +219,10 @@ describe("vite-plus-base-template", () => {
     expect(cleanupScripts?.commands).toContain(
       "find . -name dependency-cruiser.cjs -not -path '*/node_modules/*' -not -path '*/.git/*' -delete",
     );
-    expect(creation.files?.[".dependency-cruiser.cjs"]).toContain(
-      "dependency-cruiser/configs/recommended",
+    expect(cleanupScripts?.commands).toContain(
+      "find . -name .dependency-cruiser.cjs -not -path '*/node_modules/*' -not -path '*/.git/*' -delete",
     );
+    expect(creation.files?.[".dependency-cruiser.cjs"]).toBeUndefined();
   });
 
   it("removes legacy .cursor/skills during transition", async () => {
@@ -267,9 +281,7 @@ describe("vite-plus-base-template", () => {
     const pkg = JSON.parse(creation.files?.["package.json"] as string);
     expect(pkg.devDependencies?.["dependency-cruiser"]).toBe("^18.5.0");
     expect(pkg.private).toBe(true);
-    expect(creation.files?.[".dependency-cruiser.cjs"]).toContain(
-      "dependency-cruiser/configs/recommended",
-    );
+    expect(creation.files?.[".dependency-cruiser.cjs"]).toBeUndefined();
     expect(
       readNestedFile(creation.files as Record<string, unknown>, [
         ".agents",
@@ -530,6 +542,84 @@ Custom status surfaces section.
         "typescriptteam.native-preview",
       ],
     });
+  });
+
+  it("emits GitHub Actions CI workflows in setup mode", async () => {
+    const creation = await produceTemplate(stratumTemplate, {
+      mode: "setup",
+      options: templateOptions,
+      files: {
+        "package.json": existingPackageJson,
+      },
+    } as unknown as Parameters<typeof produceTemplate>[1]);
+
+    const ciWorkflow = readNestedFile(creation.files as Record<string, unknown>, [
+      ".github",
+      "workflows",
+      "ci.yaml",
+    ]);
+    const prepareAction = readNestedFile(creation.files as Record<string, unknown>, [
+      ".github",
+      "actions",
+      "prepare",
+      "action.yaml",
+    ]);
+
+    expect(ciWorkflow).toContain("name: CI");
+    expect(ciWorkflow).toContain("uses: ./.github/actions/prepare");
+    expect(ciWorkflow).toContain("vp install --frozen-lockfile");
+    expect(ciWorkflow).toContain("vp check");
+    expect(ciWorkflow).toContain("vp test");
+    expect(ciWorkflow).toContain("vp build");
+    expect(ciWorkflow).not.toContain("pnpm/action-setup");
+    expect(prepareAction).toContain("voidzero-dev/setup-vp@v1.21.1");
+    expect(prepareAction).toContain('cache: "true"');
+    expect(prepareAction).toContain('run-install: "false"');
+    expect(
+      readNestedFile(creation.files as Record<string, unknown>, [
+        ".github",
+        "workflows",
+        "release.yaml",
+      ]),
+    ).toBeUndefined();
+  });
+
+  it("emits release workflow for publishable workspace packages", async () => {
+    const creation = await produceTemplate(stratumTemplate, {
+      mode: "setup",
+      options: templateOptions,
+      files: {
+        "package.json": existingPackageJson,
+        "pnpm-workspace.yaml": "packages:\n  - packages/*\n",
+        packages: {
+          lib: {
+            "package.json": JSON.stringify({
+              name: "@acme/lib",
+              version: "1.0.0",
+              exports: { ".": "./dist/index.mjs" },
+              scripts: { build: "vp pack" },
+            }),
+          },
+        },
+      },
+    } as unknown as Parameters<typeof produceTemplate>[1]);
+
+    const releaseWorkflow = readNestedFile(creation.files as Record<string, unknown>, [
+      ".github",
+      "workflows",
+      "release.yaml",
+    ]);
+
+    expect(releaseWorkflow).toContain("id-token: write");
+    expect(releaseWorkflow).toContain("Publish @acme/lib");
+    expect(releaseWorkflow).toContain("pnpm publish --no-git-checks --access public");
+    expect(
+      readNestedFile(creation.files as Record<string, unknown>, [
+        "docs",
+        "agents",
+        "ci-release.md",
+      ]),
+    ).toContain("npm trusted publishing");
   });
 
   it("preserves catalog TypeScript dependencies during transition", async () => {
