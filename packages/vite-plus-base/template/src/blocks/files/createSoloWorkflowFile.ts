@@ -1,6 +1,7 @@
 /**
  * PROTOTYPE — vendored/adapted from CTA createSoloWorkflowFile.
  */
+import { DEFAULT_RUNNER } from "../blockGitHubActionsCI/constants.ts";
 import { createJobName } from "./createJobName.ts";
 import { formatWorkflowYaml } from "./formatWorkflowYaml.ts";
 
@@ -32,7 +33,7 @@ export function createSoloWorkflowFile({
         ...(jobName && { name: jobName }),
         ...(environment && { environment }),
         permissions,
-        "runs-on": "ubuntu-latest",
+        "runs-on": DEFAULT_RUNNER,
         steps,
       },
     },

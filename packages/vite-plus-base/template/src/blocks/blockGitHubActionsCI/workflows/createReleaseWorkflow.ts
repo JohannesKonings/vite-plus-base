@@ -1,6 +1,7 @@
 import { createSoloWorkflowFile } from "../../files/createSoloWorkflowFile.ts";
 import type { PackageManifest } from "../detectPublishablePackages.ts";
 import type { WorkspaceShape } from "../../intake/detectWorkspaceShape.ts";
+import { resolveUses } from "../actions/resolveUses.ts";
 import { DEFAULT_BRANCH } from "../constants.ts";
 
 function verificationSteps(workspaceShape: WorkspaceShape) {
@@ -8,7 +9,7 @@ function verificationSteps(workspaceShape: WorkspaceShape) {
   const buildCommand = workspaceShape === "package-workspace" ? "vp run -r build" : "vp build";
 
   return [
-    { uses: "actions/checkout@v4" },
+    { uses: resolveUses("actions/checkout", "v7") },
     { uses: "./.github/actions/prepare" },
     { run: "vp install --frozen-lockfile" },
     { run: "vp check" },

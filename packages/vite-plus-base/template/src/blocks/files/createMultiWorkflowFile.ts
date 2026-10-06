@@ -5,6 +5,7 @@
 import { createJobName } from "./createJobName.ts";
 import { formatWorkflowYaml } from "./formatWorkflowYaml.ts";
 import { resolveUses } from "../blockGitHubActionsCI/actions/resolveUses.ts";
+import { DEFAULT_RUNNER } from "../blockGitHubActionsCI/constants.ts";
 
 export interface MultiWorkflowJobOptions {
   name: string;
@@ -37,9 +38,9 @@ export function createMultiWorkflowFile({
         {
           if: job.if,
           name: job.name,
-          "runs-on": "ubuntu-latest",
+          "runs-on": DEFAULT_RUNNER,
           steps: [
-            { uses: resolveUses("actions/checkout", "v4") },
+            { uses: resolveUses("actions/checkout", "v7") },
             { uses: "./.github/actions/prepare" },
             ...job.steps,
           ],

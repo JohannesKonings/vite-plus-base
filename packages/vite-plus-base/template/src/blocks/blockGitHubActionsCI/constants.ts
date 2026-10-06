@@ -2,3 +2,5 @@
 export const DEFAULT_SETUP_VP_VERSION = "v1.21.1";
 
 export const DEFAULT_BRANCH = "main";
+
+export const DEFAULT_RUNNER = "ubuntu-24.04";
