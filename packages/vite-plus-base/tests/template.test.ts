@@ -636,10 +636,17 @@ Custom status surfaces section.
       $schema: "https://docs.renovatebot.com/renovate-schema.json",
       extends: ["config:recommended"],
       minimumReleaseAge: "2 days",
+      packageRules: [
+        {
+          description: "Allow immediate updates for @jaykingson/vite-plus-base",
+          matchPackageNames: ["@jaykingson/vite-plus-base"],
+          minimumReleaseAge: null,
+        },
+      ],
       vulnerabilityAlerts: { enabled: true },
     });
     expect(creation.files?.["pnpm-workspace.yaml"]).toBe(
-      "minimumReleaseAge: 2880\nminimumReleaseAgeStrict: true\n",
+      "minimumReleaseAge: 2880\nminimumReleaseAgeStrict: true\nminimumReleaseAgeExclude:\n  - '@jaykingson/vite-plus-base'\n",
     );
     expect(creation.files?.["dependabot.yml"]).toBeUndefined();
   });
@@ -655,7 +662,7 @@ Custom status surfaces section.
     } as unknown as Parameters<typeof produceTemplate>[1]);
 
     expect(creation.files?.["pnpm-workspace.yaml"]).toBe(
-      "minimumReleaseAge: 2880\nminimumReleaseAgeStrict: true\n\npackages:\n  - packages/*\n",
+      "minimumReleaseAge: 2880\nminimumReleaseAgeStrict: true\nminimumReleaseAgeExclude:\n  - '@jaykingson/vite-plus-base'\n\npackages:\n  - packages/*\n",
     );
     expect(JSON.parse(creation.files?.["renovate.json"] as string).minimumReleaseAge).toBe(
       "2 days",
@@ -674,7 +681,7 @@ Custom status surfaces section.
           vulnerabilityAlerts: false,
         }),
         "pnpm-workspace.yaml":
-          "minimumReleaseAge: 10080\nminimumReleaseAgeStrict: false\npackages:\n  - packages/*\n",
+          "minimumReleaseAge: 10080\nminimumReleaseAgeStrict: false\nminimumReleaseAgeExclude:\n  - webpack\npackages:\n  - packages/*\n",
       },
     } as unknown as Parameters<typeof produceTemplate>[1]);
 
@@ -682,7 +689,7 @@ Custom status surfaces section.
     expect(renovateJson.minimumReleaseAge).toBe("2 days");
     expect(renovateJson.vulnerabilityAlerts).toEqual({ enabled: true });
     expect(creation.files?.["pnpm-workspace.yaml"]).toBe(
-      "minimumReleaseAge: 2880\nminimumReleaseAgeStrict: true\n\npackages:\n  - packages/*\n",
+      "minimumReleaseAge: 2880\nminimumReleaseAgeStrict: true\nminimumReleaseAgeExclude:\n  - '@jaykingson/vite-plus-base'\n\npackages:\n  - packages/*\n",
     );
   });
 
