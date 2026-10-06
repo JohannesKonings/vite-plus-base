@@ -1,8 +1,13 @@
-import { MINIMUM_RELEASE_AGE_PNPM_MINUTES } from "../../constants/minimumReleaseAge.ts";
+import {
+  MINIMUM_RELEASE_AGE_EXCLUDE_PACKAGE,
+  MINIMUM_RELEASE_AGE_PNPM_MINUTES,
+} from "../../constants/minimumReleaseAge.ts";
 
 const RELEASE_AGE_HEADER = [
   `minimumReleaseAge: ${MINIMUM_RELEASE_AGE_PNPM_MINUTES}`,
   "minimumReleaseAgeStrict: true",
+  "minimumReleaseAgeExclude:",
+  `  - '${MINIMUM_RELEASE_AGE_EXCLUDE_PACKAGE}'`,
 ] as const;
 
 export function formatMinimalPnpmWorkspaceYaml() {
@@ -10,13 +15,30 @@ export function formatMinimalPnpmWorkspaceYaml() {
 }
 
 function stripReleaseAgeSettings(yaml: string) {
+  let skippingExcludeList = false;
+
   return yaml.split("\n").filter((line) => {
     const trimmed = line.trim();
-    return (
-      trimmed !== "" &&
-      !trimmed.startsWith("minimumReleaseAge:") &&
-      !trimmed.startsWith("minimumReleaseAgeStrict:")
-    );
+
+    if (
+      trimmed.startsWith("minimumReleaseAge:") ||
+      trimmed.startsWith("minimumReleaseAgeStrict:")
+    ) {
+      skippingExcludeList = false;
+      return false;
+    }
+
+    if (trimmed.startsWith("minimumReleaseAgeExclude:")) {
+      skippingExcludeList = true;
+      return false;
+    }
+
+    if (skippingExcludeList && trimmed.startsWith("- ")) {
+      return false;
+    }
+
+    skippingExcludeList = false;
+    return trimmed !== "";
   });
 }
 
