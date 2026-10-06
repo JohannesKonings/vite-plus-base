@@ -1,7 +1,10 @@
 import fs from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 
-const vendoredDirectory = path.join(import.meta.dirname, "vendored");
+const require = createRequire(import.meta.url);
+const packageRoot = path.dirname(require.resolve("@jaykingson/vite-plus-base/package.json"));
+const vendoredDirectory = path.join(packageRoot, "template/src/blocks/blockAgentSkills/vendored");
 
 interface NestedFiles {
   [key: string]: string | NestedFiles;

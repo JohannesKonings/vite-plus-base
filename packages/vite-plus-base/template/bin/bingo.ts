@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 import { readFile } from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
 
 import { createSystemContext, prepareOptions, runTemplate, type Template } from "bingo";
 import { runInsideClackDisplay } from "bingo/lib/cli/display/runInsideClackDisplay.js";
@@ -17,11 +16,10 @@ import template from "../src/template.ts";
 const directory = ".";
 const typedTemplate = template as unknown as Template;
 
+const require = createRequire(import.meta.url);
+
 const templatePackageData = JSON.parse(
-  await readFile(
-    path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../package.json"),
-    "utf8",
-  ),
+  await readFile(require.resolve("@jaykingson/vite-plus-base/package.json"), "utf8"),
 ) as { name: string; version: string };
 
 process.exitCode = await runInsideClackDisplay(templatePackageData, async (display) => {
