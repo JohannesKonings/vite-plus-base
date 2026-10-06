@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "Opinionated vite-plus config wrapper for apps and libraries.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JohannesKonings/vite-plus-base"
+  },
   "bin": {
     "vite-plus-base-bingo": "./template/bin/bingo.ts",
     "vite-plus-base-template": "./template/bin/index.ts"
