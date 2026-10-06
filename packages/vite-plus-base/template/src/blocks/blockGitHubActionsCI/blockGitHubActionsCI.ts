@@ -9,7 +9,7 @@ import { createPrepareAction } from "./actions/createPrepareAction.ts";
 import { DEFAULT_SETUP_VP_VERSION } from "./constants.ts";
 import { createCiReleaseDoc } from "./docs/createCiReleaseDoc.ts";
 import { detectPublishablePackages, type PackageManifest } from "./detectPublishablePackages.ts";
-import { detectWorkspaceShape, type WorkspaceShape } from "./detectWorkspaceShape.ts";
+import { detectWorkspaceShape, type WorkspaceShape } from "../intake/detectWorkspaceShape.ts";
 import { createCiWorkflow } from "./workflows/createCiWorkflow.ts";
 import { createReleaseWorkflow } from "./workflows/createReleaseWorkflow.ts";
 import { withPreviously } from "../files/withPreviously.ts";

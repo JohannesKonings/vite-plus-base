@@ -2,10 +2,7 @@ import { z } from "zod";
 
 import { blockPackageJsonConfigSchema } from "../../../../src/workspace-config.ts";
 import { base } from "../../base.ts";
-import {
-  detectWorkspaceShape,
-  type WorkspaceShape,
-} from "../blockGitHubActionsCI/detectWorkspaceShape.ts";
+import { detectWorkspaceShape, type WorkspaceShape } from "../intake/detectWorkspaceShape.ts";
 import { intakeFile } from "../intake/intakeFile.ts";
 import { intakeFileAsJson } from "../intake/intakeFileAsJson.ts";
 import { intakeWorkspaceBingo } from "../intake/intakeWorkspaceBingo.ts";
