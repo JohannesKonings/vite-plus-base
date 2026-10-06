@@ -1,0 +1,2 @@
+export const MINIMUM_RELEASE_AGE_RENOVATE = "2 days";
+export const MINIMUM_RELEASE_AGE_PNPM_MINUTES = 2880;
