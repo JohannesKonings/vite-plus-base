@@ -18,7 +18,7 @@ One deep module `blockGitHubActionsCI` owns all generated GitHub Actions files. 
 
 No other files under `.github/actions/`. Use `.yaml` extension; `withPreviously` handles `.yml` → `.yaml` on transition.
 
-**Not in v1:** `dependabot.yml`, branch rulesets, `pr-review-requested.yaml`, Vite Task cache steps.
+**Not in v1:** `dependabot.yml` (use Renovate via `blockRenovate` — see `template/src/constants/PROTOTYPE-minimum-release-age.md`), branch rulesets, `pr-review-requested.yaml`, Vite Task cache steps.
 
 ### Block API
 
@@ -84,5 +84,5 @@ See `packages/vite-plus-base/tests/prototype-blockGitHubActionsCI.test-outline.t
 ### Explicitly deferred
 
 - Auth/OIDC publish steps → [#10](https://github.com/JohannesKonings/vite-plus-base/issues/10)
-- Dependabot github-actions → map fog
+- ~~Dependabot github-actions~~ → covered by `blockRenovate` (minimum release age policy)
 - Branch rulesets → needs base `owner`/`repository` options
