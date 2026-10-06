@@ -48,7 +48,7 @@ function formatValue(value: unknown, level: number, key?: string): string {
   }
 
   if (value && typeof value === "object") {
-    return `\n${formatMapping(value as Record<string, unknown>, level)}`;
+    return `\n${formatMapping(value as Record<string, unknown>, level + 1)}`;
   }
 
   return JSON.stringify(value);
