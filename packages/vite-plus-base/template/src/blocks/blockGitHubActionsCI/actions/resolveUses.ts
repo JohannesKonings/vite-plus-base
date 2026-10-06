@@ -2,7 +2,7 @@
  * PROTOTYPE — scoped resolveUses (#8): only actions this template generates.
  */
 const PINNED_ACTIONS: Record<string, string> = {
-  "actions/checkout": "v4",
+  "actions/checkout": "v7",
 };
 
 export function resolveUses(action: string, fallbackVersion: string): string {
