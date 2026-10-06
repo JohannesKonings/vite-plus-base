@@ -1,6 +1,6 @@
 {
   "name": "@jaykingson/vite-plus-base",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Opinionated vite-plus config wrapper for apps and libraries.",
   "license": "MIT",
   "repository": {
@@ -8,8 +8,8 @@
     "url": "https://github.com/JohannesKonings/vite-plus-base"
   },
   "bin": {
-    "vite-plus-base-bingo": "./template/bin/bingo.ts",
-    "vite-plus-base-template": "./template/bin/index.ts"
+    "vite-plus-base-bingo": "./dist/template/bin/bingo.mjs",
+    "vite-plus-base-template": "./dist/template/bin/index.mjs"
   },
   "files": [
     "dist",
@@ -18,6 +18,8 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.mjs",
+    "./template/bin": "./dist/template/bin/index.mjs",
+    "./template/bin/bingo": "./dist/template/bin/bingo.mjs",
     "./package.json": "./package.json"
   },
   "scripts": {

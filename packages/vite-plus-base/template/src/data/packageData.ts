@@ -9,11 +9,9 @@ type PackageManifest = {
   devDependencies?: Record<string, string>;
 };
 
-export const packageData =
-  // Importing from above src/ would expand the TS build rootDir
-  require("../../../package.json") as PackageManifest;
+export const packageData = require("@jaykingson/vite-plus-base/package.json") as PackageManifest;
 
-const packageRoot = dirname(require.resolve("../../../package.json"));
+const packageRoot = dirname(require.resolve("@jaykingson/vite-plus-base/package.json"));
 
 export function getPackageDependencies(...names: string[]) {
   return Object.fromEntries(names.map((name) => [name, getPackageDependency(name)]));
