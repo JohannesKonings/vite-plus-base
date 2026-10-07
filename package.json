@@ -4,10 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "changeset": "changeset",
+    "version-packages": "changeset version && vp install",
+    "release": "vp run -r build && vp run -r lint:package && changeset publish",
     "ready": "vp check && vp run -r test && vp run -r build && vp run -r lint:package",
     "prepare": "vp config"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
     "@jaykingson/vite-plus-base": "workspace:*",
     "@types/node": "catalog:",
     "dependency-cruiser": "^18.5.0",

@@ -597,7 +597,7 @@ Custom status surfaces section.
               name: "@acme/lib",
               version: "1.0.0",
               exports: { ".": "./dist/index.mjs" },
-              scripts: { build: "vp pack" },
+              scripts: { build: "vp pack", "lint:package": "node scripts/lint-package.mts" },
             }),
           },
         },
@@ -611,8 +611,14 @@ Custom status surfaces section.
     ]);
 
     expect(releaseWorkflow).toContain("id-token: write");
+    expect(releaseWorkflow).toContain("contents: read");
     expect(releaseWorkflow).toContain("Publish @acme/lib");
     expect(releaseWorkflow).toContain("pnpm publish --no-git-checks --access public");
+    expect(releaseWorkflow).not.toContain("changesets/action");
+    expect(releaseWorkflow).not.toContain("lint:package");
+    expect(
+      readNestedFile(creation.files as Record<string, unknown>, [".changeset", "config.json"]),
+    ).toBeUndefined();
     expect(
       readNestedFile(creation.files as Record<string, unknown>, [
         "docs",
@@ -620,6 +626,141 @@ Custom status surfaces section.
         "ci-release.md",
       ]),
     ).toContain("npm trusted publishing");
+  });
+
+  it("emits a Changesets release for a package workspace when opted in", async () => {
+    const creation = await produceTemplate(stratumTemplate, {
+      mode: "setup",
+      options: templateOptions,
+      files: {
+        "package.json": JSON.stringify({
+          ...existingPackageData,
+          scripts: { check: "vp check", "lint:package": "vp run -r lint:package" },
+          devDependencies: { vite: "catalog:", "@changesets/cli": "catalog:" },
+        }),
+        "pnpm-workspace.yaml": "packages:\n  - packages/*\n",
+        "vite.config.ts": `import { defineWorkspaceConfig } from "@jaykingson/vite-plus-base";
+
+export default defineWorkspaceConfig({
+  bingo: {
+    blockPackageJson: { name: "app" },
+    blockGitHubActionsCI: {
+      release: "changesets",
+      repository: "acme/app",
+      npmEnvironment: "npm",
+    },
+  },
+});`,
+        packages: {
+          lib: {
+            "package.json": JSON.stringify({
+              name: "@acme/lib",
+              version: "1.0.0",
+              exports: { ".": "./dist/index.mjs" },
+              scripts: { build: "vp pack", "lint:package": "node scripts/lint-package.mts" },
+            }),
+          },
+        },
+      },
+    } as unknown as Parameters<typeof produceTemplate>[1]);
+
+    const releaseWorkflow = readNestedFile(creation.files as Record<string, unknown>, [
+      ".github",
+      "workflows",
+      "release.yaml",
+    ]);
+    const config = JSON.parse(
+      readNestedFile(creation.files as Record<string, unknown>, [
+        ".changeset",
+        "config.json",
+      ]) as string,
+    );
+    const pkg = JSON.parse(creation.files?.["package.json"] as string);
+    const doc = readNestedFile(creation.files as Record<string, unknown>, [
+      "docs",
+      "agents",
+      "ci-release.md",
+    ]);
+
+    expect(releaseWorkflow).toContain("changesets/action@v2");
+    expect(releaseWorkflow).toContain("fetch-depth: 0");
+    expect(releaseWorkflow).toContain("contents: write");
+    expect(releaseWorkflow).toContain("pull-requests: write");
+    expect(releaseWorkflow).toContain("id-token: write");
+    expect(releaseWorkflow).toContain("environment: npm");
+    expect(releaseWorkflow).toContain("vp check");
+    expect(releaseWorkflow).toContain("vp run -r test");
+    expect(releaseWorkflow).toContain("vp run -r build");
+    expect(releaseWorkflow).toContain("vp run -r lint:package");
+    expect(releaseWorkflow).toContain("version-script: vp run version-packages");
+    expect(releaseWorkflow).toContain("publish-script: vp run release");
+    expect(releaseWorkflow).toContain("pr-title: Version Packages");
+    expect(releaseWorkflow).toContain("create-github-releases: true");
+    expect(releaseWorkflow).not.toContain("pnpm publish");
+    expect(config).toMatchObject({
+      access: "public",
+      commit: false,
+      baseBranch: "main",
+      changelog: ["@changesets/changelog-github", { repo: "acme/app" }],
+      privatePackages: { version: false, tag: false },
+    });
+    expect(pkg.scripts).toMatchObject({
+      changeset: "changeset",
+      "version-packages": "changeset version && vp install",
+      release: "vp run -r build && vp run -r lint:package && changeset publish",
+    });
+    expect(pkg.devDependencies?.["@changesets/cli"]).toBe("catalog:");
+    expect(pkg.devDependencies?.["@changesets/changelog-github"]).toBe("^1.0.1");
+    expect(pkg.devDependencies?.vite).toBe("catalog:");
+    expect(doc).toContain("Version Packages");
+    expect(doc).toContain("Allow GitHub Actions to create and approve pull requests");
+    expect(creation.suggestions?.some((line) => line.includes("vp run changeset"))).toBe(true);
+  });
+
+  it("uses single-package commands and package.json repository for Changesets", async () => {
+    const creation = await produceTemplate(stratumTemplate, {
+      mode: "transition",
+      options: templateOptions,
+      files: {
+        "package.json": JSON.stringify({
+          name: "@acme/app",
+          version: "1.0.0",
+          type: "module",
+          exports: { ".": "./dist/index.mjs" },
+          scripts: { build: "vp build" },
+          repository: { type: "git", url: "git+https://github.com/acme/app.git" },
+        }),
+        "vite.config.ts": `import { defineWorkspaceConfig } from "@jaykingson/vite-plus-base";
+
+export default defineWorkspaceConfig({
+  bingo: {
+    blockPackageJson: { name: "app" },
+    blockGitHubActionsCI: { release: "changesets" },
+  },
+});`,
+      },
+    } as unknown as Parameters<typeof produceTemplate>[1]);
+
+    const releaseWorkflow = readNestedFile(creation.files as Record<string, unknown>, [
+      ".github",
+      "workflows",
+      "release.yaml",
+    ]);
+    const config = JSON.parse(
+      readNestedFile(creation.files as Record<string, unknown>, [
+        ".changeset",
+        "config.json",
+      ]) as string,
+    );
+    const pkg = JSON.parse(creation.files?.["package.json"] as string);
+
+    expect(releaseWorkflow).toContain("run: vp test");
+    expect(releaseWorkflow).toContain("run: vp build");
+    expect(releaseWorkflow).not.toContain("vp run -r");
+    expect(releaseWorkflow).not.toContain("lint:package");
+    expect(config.changelog).toEqual(["@changesets/changelog-github", { repo: "acme/app" }]);
+    expect(pkg.scripts.release).toBe("vp build && changeset publish");
+    expect(pkg.devDependencies?.["@changesets/cli"]).toBe("^3.0.3");
   });
 
   it("emits minimum release age policy in setup mode for single-package repos", async () => {

@@ -68,6 +68,8 @@ function parseBlockGitHubActionsCI(literal: string | undefined) {
     emitRelease: parseBooleanProperty(literal, "emitRelease"),
     auth: parsedAuth,
     npmEnvironment: parseStringProperty(literal, "npmEnvironment"),
+    release: parseStringProperty(literal, "release"),
+    repository: parseStringProperty(literal, "repository"),
   });
 }
 

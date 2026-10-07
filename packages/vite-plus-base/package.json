@@ -12,6 +12,7 @@
     "vite-plus-base-template": "./dist/template/bin/index.mjs"
   },
   "files": [
+    "CHANGELOG.md",
     "dist",
     "template"
   ],

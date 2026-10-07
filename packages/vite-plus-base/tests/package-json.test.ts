@@ -7,9 +7,17 @@ import {
   mergeDevDependencies,
   mergeDevEngines,
   mergeEngines,
+  mergeScripts,
 } from "../template/src/blocks/blockPackageJson/package-json.ts";
 
 describe("package-json helpers", () => {
+  it("merges scripts without removing existing entries", () => {
+    expect(mergeScripts({ check: "vp check" }, { changeset: "changeset" })).toEqual({
+      check: "vp check",
+      changeset: "changeset",
+    });
+  });
+
   it("merges devDependencies without removing existing entries", () => {
     expect(mergeDevDependencies({ vite: "catalog:" }, { "dependency-cruiser": "^18.5.0" })).toEqual(
       {

@@ -117,6 +117,36 @@ export default defineWorkspaceConfig({
     });
   });
 
+  it("parses Changesets release options from bingo.blockGitHubActionsCI", () => {
+    expect(
+      intakeWorkspaceBingo({
+        "vite.config.ts": `import { defineWorkspaceConfig } from "@jaykingson/vite-plus-base";
+
+export default defineWorkspaceConfig({
+  bingo: {
+    blockPackageJson: {
+      name: "my-monorepo",
+    },
+    blockGitHubActionsCI: {
+      release: "changesets",
+      repository: "acme/app",
+      emitRelease: true,
+    },
+  },
+});`,
+      }),
+    ).toEqual({
+      blockPackageJson: {
+        name: "my-monorepo",
+      },
+      blockGitHubActionsCI: {
+        release: "changesets",
+        repository: "acme/app",
+        emitRelease: true,
+      },
+    });
+  });
+
   it("throws for invalid bingo config in vite.config.ts", () => {
     expect(() =>
       intakeWorkspaceBingo({

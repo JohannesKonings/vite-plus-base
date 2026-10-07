@@ -22,6 +22,11 @@ export const blockGitHubActionsCIConfigSchema = z.object({
   emitRelease: z.boolean().optional(),
   auth: z.enum(["oidc", "token"]).optional(),
   npmEnvironment: z.string().optional(),
+  release: z.enum(["direct", "changesets"]).optional(),
+  repository: z
+    .string()
+    .regex(/^[^/\s]+\/[^/\s]+$/)
+    .optional(),
 });
 
 export const bingoConfigSchema = z.object({

@@ -7,7 +7,8 @@ export interface PackageManifest {
   exports?: unknown;
   files?: unknown;
   bin?: unknown;
-  scripts?: { build?: string; prepublishOnly?: string };
+  repository?: unknown;
+  scripts?: Record<string, string>;
 }
 
 interface RawPackageManifest {
@@ -16,7 +17,8 @@ interface RawPackageManifest {
   exports?: unknown;
   files?: unknown;
   bin?: unknown;
-  scripts?: { build?: string; prepublishOnly?: string };
+  repository?: unknown;
+  scripts?: Record<string, string>;
 }
 
 function isPublishable(manifest: RawPackageManifest): boolean {
@@ -108,6 +110,54 @@ export function detectPublishablePackages(files: Record<string, unknown>): Packa
       exports: manifest.exports,
       files: manifest.files,
       bin: manifest.bin,
+      repository: manifest.repository,
       scripts: manifest.scripts,
     }));
+}
+
+export function workspaceHasScript(files: Record<string, unknown>, scriptName: string): boolean {
+  return collectPackageManifests(files).some(
+    ({ manifest }) => typeof manifest.scripts?.[scriptName] === "string",
+  );
+}
+
+export function readGitHubRepository(repository: unknown): string | undefined {
+  const url =
+    typeof repository === "string"
+      ? repository
+      : repository &&
+          typeof repository === "object" &&
+          "url" in repository &&
+          typeof repository.url === "string"
+        ? repository.url
+        : undefined;
+
+  if (!url) {
+    return undefined;
+  }
+
+  const match = url.match(/github\.com[:/]([^/]+)\/([^/#]+)/);
+  if (!match) {
+    return undefined;
+  }
+
+  const repo = match[2].replace(/\.git$/, "");
+  return `${match[1]}/${repo}`;
+}
+
+export function readWorkspaceGitHubRepository(files: Record<string, unknown>): string | undefined {
+  const manifests = collectPackageManifests(files);
+  const ordered = [
+    ...manifests.filter(({ path }) => path === "."),
+    ...manifests.filter(({ path }) => path !== "."),
+  ];
+
+  for (const { manifest } of ordered) {
+    const repository = readGitHubRepository(manifest.repository);
+    if (repository) {
+      return repository;
+    }
+  }
+
+  return undefined;
 }
