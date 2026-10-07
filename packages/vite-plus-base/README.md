@@ -76,6 +76,26 @@ vp run @jaykingson/vite-plus-base#sync-skills
 
 This clones [mattpocock/skills](https://github.com/mattpocock/skills) at the pinned ref in `skills-lock.json` and updates `template/src/blocks/blockAgentSkills/vendored/`.
 
+## Changesets release
+
+`blockGitHubActionsCI` writes CI and, when the repo has a publishable package, a release workflow that publishes the version already committed in `package.json`. Opt into Changesets by setting `bingo.blockGitHubActionsCI.release` to `"changesets"`:
+
+```ts
+export default defineWorkspaceConfig({
+  bingo: {
+    blockPackageJson: { name: "my-monorepo" },
+    blockGitHubActionsCI: {
+      release: "changesets",
+      repository: "owner/repo",
+    },
+  },
+});
+```
+
+Transition then adds `@changesets/cli` and `@changesets/changelog-github`, the root scripts `changeset`, `version-packages`, and `release`, `.changeset/config.json`, and a `release.yaml` workflow. The config publishes with `access: public` and does not version or tag private packages. `repository` can be omitted when a `package.json` `repository` field already points at GitHub; changelog entries use it for pull request and commit links.
+
+Contributors run `vp run changeset` in the pull request. A push to `main` opens or updates a **Version Packages** pull request that bumps versions and writes `CHANGELOG.md`. Merging that pull request publishes to npm, pushes git tags, and creates a GitHub release per package. The workflow keeps the check, test, and build gates, and runs `lint:package` when a package already defines that script. `npmEnvironment` still adds an approval environment. See the generated `docs/agents/ci-release.md` for the one-time GitHub and npm settings.
+
 ## Usage
 
 **Monorepo root** (`vite.config.ts`):

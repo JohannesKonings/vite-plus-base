@@ -5,6 +5,10 @@ export default defineWorkspaceConfig({
     blockPackageJson: {
       name: "vite-plus-base",
     },
+    blockGitHubActionsCI: {
+      release: "changesets",
+      repository: "JohannesKonings/vite-plus-base",
+    },
     blockAgentSkills: {
       glossaryMap: {
         root: {

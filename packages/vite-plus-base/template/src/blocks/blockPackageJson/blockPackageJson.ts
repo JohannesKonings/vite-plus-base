@@ -12,12 +12,14 @@ import {
   defaultEngines,
   formatPackageJson,
   mergeDevDependencies,
+  mergeScripts,
 } from "./package-json.ts";
 
 const packageJsonProperties = blockPackageJsonConfigSchema
   .partial()
   .extend({
     devDependencies: z.record(z.string(), z.string()).optional(),
+    scripts: z.record(z.string(), z.string()).optional(),
     existingPackage: z.record(z.string(), z.unknown()).optional(),
     existingPnpmWorkspace: z.string().optional(),
     workspaceShape: z.enum(["single-package", "package-workspace"]).optional(),
@@ -68,6 +70,12 @@ export const blockPackageJson = base.createBlock({
       packageData.devDependencies as Record<string, string> | undefined,
       addons.properties.devDependencies,
     );
+    const scripts = addons.properties.scripts
+      ? mergeScripts(
+          packageData.scripts as Record<string, string> | undefined,
+          addons.properties.scripts,
+        )
+      : undefined;
 
     const workspaceShape = addons.properties.workspaceShape ?? "single-package";
     const existingPnpmWorkspace = addons.properties.existingPnpmWorkspace;
@@ -77,6 +85,7 @@ export const blockPackageJson = base.createBlock({
         "package.json": formatPackageJson(packageData, {
           name,
           devDependencies,
+          scripts,
           devEngines: defaultDevEngines,
           engines: defaultEngines,
         }),

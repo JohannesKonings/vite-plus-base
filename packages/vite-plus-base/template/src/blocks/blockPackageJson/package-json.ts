@@ -44,6 +44,20 @@ export function mergeDevDependencies(
   };
 }
 
+export function mergeScripts(
+  existing: Record<string, string> | undefined,
+  additions: Record<string, string> | undefined,
+): Record<string, string> | undefined {
+  if (!additions || Object.keys(additions).length === 0) {
+    return existing;
+  }
+
+  return {
+    ...existing,
+    ...additions,
+  };
+}
+
 function mergeDevEngineSpec(
   existing: DevEngineSpec | undefined,
   defaults: DevEngineSpec | undefined,
@@ -85,6 +99,7 @@ export function formatPackageJson(
   updates: {
     name?: string;
     devDependencies?: Record<string, string>;
+    scripts?: Record<string, string>;
     devEngines?: DevEngines;
     engines?: Engines;
   },
@@ -97,6 +112,10 @@ export function formatPackageJson(
 
   if (updates.devDependencies) {
     next.devDependencies = updates.devDependencies;
+  }
+
+  if (updates.scripts) {
+    next.scripts = updates.scripts;
   }
 
   next.devEngines = mergeDevEngines(next.devEngines as DevEngines | undefined, updates.devEngines);

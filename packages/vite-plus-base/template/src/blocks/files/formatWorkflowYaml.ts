@@ -78,6 +78,21 @@ function formatMapping(value: Record<string, unknown>, level: number): string {
   return lines.join("\n");
 }
 
+function formatSequenceEntry(
+  indentLevel: number,
+  label: string,
+  value: unknown,
+  key: string,
+  formatLevel: number,
+): string {
+  const formatted = formatValue(value, formatLevel, key);
+  if (formatted.startsWith("\n")) {
+    return `${indentLine(indentLevel, `${label}:`)}${formatted}`;
+  }
+
+  return indentLine(indentLevel, `${label}: ${formatted}`);
+}
+
 function formatSequence(items: unknown[], level: number): string {
   return items
     .map((item) => {
@@ -85,12 +100,10 @@ function formatSequence(items: unknown[], level: number): string {
         const entries = Object.entries(item as Record<string, unknown>);
         const [firstKey, firstValue] = entries[0];
         const lines = [
-          indentLine(level, `- ${firstKey}: ${formatValue(firstValue, level + 1, firstKey)}`),
+          formatSequenceEntry(level, `- ${firstKey}`, firstValue, firstKey, level + 1),
           ...entries
             .slice(1)
-            .map(([key, value]) =>
-              indentLine(level + 1, `${key}: ${formatValue(value, level + 1, key)}`),
-            ),
+            .map(([key, value]) => formatSequenceEntry(level + 1, key, value, key, level + 1)),
         ];
         return lines.join("\n");
       }

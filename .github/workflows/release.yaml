@@ -8,23 +8,26 @@ concurrency:
 jobs:
   release:
     permissions:
-      contents: read
+      contents: write
+      pull-requests: write
       id-token: write
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/prepare
       - run: vp install --frozen-lockfile
       - run: vp check
       - run: vp run -r test
       - run: vp run -r build
-      - run: vp run -r lint:package
-      - name: "Publish @jaykingson/vite-plus-base"
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          if pnpm view "@jaykingson/vite-plus-base@${VERSION}" version 2>/dev/null; then
-            echo "Already published, skipping"
-          else
-            pnpm publish --no-git-checks --access public
-          fi
-        working-directory: packages/vite-plus-base
+      - run: "vp run -r lint:package"
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v2
+        with:
+          version-script: vp run version-packages
+          publish-script: vp run release
+          commit-message: Version Packages
+          pr-title: Version Packages
+          create-github-releases: true
