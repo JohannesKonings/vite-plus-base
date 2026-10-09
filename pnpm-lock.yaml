@@ -174,8 +174,8 @@ catalogs:
       specifier: ^0.9.3
       version: 0.9.3
     bingo-stratum:
-      specifier: 0.7.1
-      version: 0.7.1
+      specifier: 0.8.0
+      version: 0.8.0
     publint:
       specifier: ^0.3.25
       version: 0.3.25
@@ -228,7 +228,7 @@ importers:
         version: 0.9.3
       bingo-stratum:
         specifier: 'catalog:'
-        version: 0.7.1(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.9.3)(zod@3.25.76)
+        version: 0.8.0(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.9.3)(zod@3.25.76)
       zod:
         specifier: 'catalog:'
         version: 3.25.76
@@ -1265,11 +1265,11 @@ packages:
     resolution: {integrity: sha512-cpvNWqMlFkbynxJzyKJ4B/R57zR2MsPkJSldNJRxSTN6LlgB9uzQ8jAeDZy2ENoUHNlH5nApv2JyHxVqFxcjSg==}
     engines: {node: '>=18'}
 
-  bingo-stratum@0.7.1:
-    resolution: {integrity: sha512-IULvgt/wn0GlTmlqN7ln+I4jx3QQkJcsmQOmhHfbo6TemWIRZE+/xWawQuJ6/BUObWtF7t6MeZm/Is2mEHcKmA==}
+  bingo-stratum@0.8.0:
+    resolution: {integrity: sha512-n3NlAge52Kg4os7OyexD79UccRYhdDUeqrL+mWxmDOoaGeJG6Hc7V1sBiB3p1rS7QJB13a8kGLhwQ71zyBCylg==}
     engines: {node: '>=20.18.0'}
     peerDependencies:
-      bingo: ^0.13.0
+      bingo: ^0.13.1
       bingo-fs: ^0.6.0
       bingo-systems: ^0.7.0
       zod: ^4.4.3
@@ -3004,7 +3004,7 @@ snapshots:
     dependencies:
       '@octokit/types': 16.0.0
 
-  bingo-stratum@0.7.1(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.9.3)(zod@3.25.76):
+  bingo-stratum@0.8.0(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.9.3)(zod@3.25.76):
     dependencies:
       all-properties-lazy: 0.1.0
       bingo: 0.9.3
