@@ -1,8 +1,8 @@
 minimumReleaseAge: 2880
 minimumReleaseAgeStrict: true
+
 minimumReleaseAgeExclude:
   - "@jaykingson/vite-plus-base"
-
 packages:
   - packages/*
 catalogMode: prefer
