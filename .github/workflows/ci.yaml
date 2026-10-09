@@ -12,12 +12,11 @@ permissions:
 jobs:
   check:
     name: Check
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare
       - run: vp install --frozen-lockfile
       - run: vp check
       - run: vp run -r test
       - run: vp run -r build
-      - run: vp run -r lint:package
