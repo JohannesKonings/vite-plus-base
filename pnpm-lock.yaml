@@ -171,8 +171,8 @@ catalogs:
       specifier: ^24
       version: 24.19.1
     bingo:
-      specifier: ^0.9.3
-      version: 0.9.3
+      specifier: ^0.13.0
+      version: 0.13.2
     bingo-stratum:
       specifier: 0.7.1
       version: 0.7.1
@@ -225,10 +225,10 @@ importers:
     dependencies:
       bingo:
         specifier: 'catalog:'
-        version: 0.9.3
+        version: 0.13.2
       bingo-stratum:
         specifier: 'catalog:'
-        version: 0.7.1(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.9.3)(zod@3.25.76)
+        version: 0.7.1(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.13.2)(zod@3.25.76)
       zod:
         specifier: 'catalog:'
         version: 3.25.76
@@ -1253,10 +1253,6 @@ packages:
   before-after-hook@4.0.0:
     resolution: {integrity: sha512-q6tR3RPqIB1pMiTRMFcZwuG5T8vwp+vUvEG0vuI6B+Rikh5BfPp2fQ82c925FOs+b0lcFQ8CFrL+KbilfZFhOQ==}
 
-  bingo-fs@0.5.7:
-    resolution: {integrity: sha512-unn80/qC5BZlppL1HLrveT+RGXYFDXW/shM/CgDFHGIKuIvVJlnq66XKhY7B2H/vceLsow4r15Jhd/6gfuR56g==}
-    engines: {node: '>=18'}
-
   bingo-fs@0.6.0:
     resolution: {integrity: sha512-vKEkj1R0jPIjEAUWJB/F3sDgn+mtelbkRs+mmU5CoMZpKQ04WavA4DWWO/Jq88jY840PrqEJInuC9ue4RvUV0g==}
     engines: {node: '>=18'}
@@ -1274,25 +1270,17 @@ packages:
       bingo-systems: ^0.7.0
       zod: ^4.4.3
 
-  bingo-systems@0.5.5:
-    resolution: {integrity: sha512-n8ah6qwk0JojolpoILxDvQWaw9b5pzAujrzDYMNppDNtPYQMqGsqJGvUtSw6i+mKPJ/WWqVbpCskm0f8cZjtrQ==}
-    engines: {node: '>=18'}
-
   bingo-systems@0.7.0:
     resolution: {integrity: sha512-Aw5dokVSssSagrVcib9dfVYobp0h/pJKb5m+PhCkAjYkzgGiEN4E56uBVeB42rMAedg7/hxvhFsCsH6wthrDFw==}
     engines: {node: '>=22'}
 
-  bingo@0.9.3:
-    resolution: {integrity: sha512-bIo91Ac1RAyFnUotI3+iIbl35Wk5yZrJIE6JQQOt33NneQj/A34j64bkyYxeVGLxAfNSfKE9cfIyDDy7JLyNiw==}
-    engines: {node: '>=18'}
+  bingo@0.13.2:
+    resolution: {integrity: sha512-sgSZOjlD2c8Lrsgn1NBvcxNoH1tzVL+Nu3QKfg8Y9ciBP5qvXskadH7u0zpRIdtCXzOqviHyubYcInYPnqqR3Q==}
+    engines: {node: '>=22'}
     hasBin: true
 
   bottleneck@2.19.5:
     resolution: {integrity: sha512-VHiNCbI1lKdl44tGrhNfU3lup0Tj/ZBMJB5/2ZbNXRCPuRCO7ed2mgcK4r17y+KB2EfuYuRaVlwNbAeaWGSpbw==}
-
-  cached-factory@0.1.0:
-    resolution: {integrity: sha512-IGOSWu+NuED5UzCRmBeqQPZ8z7SkgrD/nN67W2iY1Qv83CVhevyMexkGclJ86saXisIqxoOnbeiTWvsCHRqJBw==}
-    engines: {node: '>=18'}
 
   cached-factory@0.3.0:
     resolution: {integrity: sha512-8PWf78SYJg9kGpUNlqOlg2iE4nu/iW7FidBVdvEZPy0GJRUyN91X7q0VzX/oyJE6bGrgr/bR0VhcGF87vgeQaw==}
@@ -2286,6 +2274,9 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
+  zod@4.6.5:
+    resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
+
 snapshots:
 
   '@andrewbranch/untar.js@1.0.4': {}
@@ -2996,18 +2987,16 @@ snapshots:
 
   before-after-hook@4.0.0: {}
 
-  bingo-fs@0.5.7: {}
-
   bingo-fs@0.6.0: {}
 
   bingo-requests@0.5.6:
     dependencies:
       '@octokit/types': 16.0.0
 
-  bingo-stratum@0.7.1(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.9.3)(zod@3.25.76):
+  bingo-stratum@0.7.1(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.13.2)(zod@3.25.76):
     dependencies:
       all-properties-lazy: 0.1.0
-      bingo: 0.9.3
+      bingo: 0.13.2
       bingo-fs: 0.6.0
       bingo-systems: 0.7.0
       cached-factory: 0.3.0
@@ -3017,13 +3006,6 @@ snapshots:
       without-undefined-properties: 0.1.2
       zod: 3.25.76
 
-  bingo-systems@0.5.5:
-    dependencies:
-      bingo-fs: 0.5.7
-      execa: 9.6.1
-      get-github-auth-token: 0.1.2
-      octokit: 5.0.5
-
   bingo-systems@0.7.0:
     dependencies:
       bingo-fs: 0.6.0
@@ -3031,16 +3013,15 @@ snapshots:
       get-github-auth-token: 0.1.2
       octokit: 5.0.5
 
-  bingo@0.9.3:
+  bingo@0.13.2:
     dependencies:
       '@clack/prompts': 0.11.0
       all-properties-lazy: 0.1.0
-      bingo-fs: 0.5.7
+      bingo-fs: 0.6.0
       bingo-requests: 0.5.6
-      bingo-systems: 0.5.5
-      cached-factory: 0.1.0
+      bingo-systems: 0.7.0
+      cached-factory: 0.3.0
       call-id: 0.1.0
-      chalk: 5.6.2
       get-github-auth-token: 0.1.2
       git-url-parse: 16.1.0
       hash-object: 5.1.0
@@ -3050,11 +3031,9 @@ snapshots:
       read-pkg: 10.1.0
       slugify: 1.6.9
       without-undefined-properties: 0.1.2
-      zod: 3.25.76
+      zod: 4.6.5
 
   bottleneck@2.19.5: {}
-
-  cached-factory@0.1.0: {}
 
   cached-factory@0.3.0: {}
 
@@ -3911,3 +3890,5 @@ snapshots:
       '@yuku-parser/binding-win32-x64': 0.9.5
 
   zod@3.25.76: {}
+
+  zod@4.6.5: {}
