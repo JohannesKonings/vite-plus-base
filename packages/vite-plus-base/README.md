@@ -38,6 +38,37 @@ The template merges `dependency-cruiser` into `package.json`, installs Matt Poco
 
 When vite-plus supports Bingo transition mode, the same template will work via `vp create` without changing the template itself.
 
+### TypeScript runner (`oxnode`)
+
+The default preset installs `@oxc-node/cli` and `@oxc-node/core` and does not install `tsx`. Scripts use `oxnode`:
+
+```bash
+oxnode file.ts
+oxnode --watch file.ts
+vp exec oxnode file.ts
+node --import @oxc-node/core/register file.ts
+```
+
+Transition rewrites `tsx file.ts`, `tsx watch`, `node --import tsx`, and `vp exec` / `pnpm` / `npx` `tsx` in root and workspace `package.json` scripts, and the same commands in root and workspace `cdk.json` files (including `app`). It removes the `tsx` dependency when those intaken commands no longer call it. The migration guide, including commands that stay manual, is written to `docs/agents/oxnode.md`.
+
+`oxnode` is experimental. It does not type-check. `.cts` files cannot use `import` / `export`. Files in `node_modules` are not transformed unless `OXC_TRANSFORM_ALL=1`. `@oxc-node/cli` and `@oxc-node/core` do not declare `engines`.
+
+### React (opt-in)
+
+Vite 8 and `@vitejs/plugin-react` 6 transform JSX with Oxc and enable Fast Refresh. React Compiler is a separate, **experimental** switch and defaults to off.
+
+```ts
+export default defineWorkspaceConfig({
+  bingo: {
+    blockPackageJson: { name: "my-workspace" },
+    blockReact: {},
+    // blockReact: { oxcCompiler: true }, // experimental oxc-transform-react
+  },
+});
+```
+
+Transition installs `@vitejs/plugin-react` and writes `tooling/vite/react.ts` plus `docs/agents/react-vite.md`. `oxcCompiler: true` also installs `oxc-transform-react` and calls `react({ compiler: true })`. The Babel route (`reactCompilerPreset()` with `@rolldown/plugin-babel`) is documented there and is not installed by this block.
+
 ### Agent skills
 
 Skills from [mattpocock/skills](https://github.com/mattpocock/skills) are vendored into the template and emitted under `.agents/skills/<skill-name>/`. Transition mode also removes the legacy `.cursor/skills/` directory.

@@ -3,6 +3,7 @@ import {
   blockAgentSkillsConfigSchema,
   blockGitHubActionsCIConfigSchema,
   blockPackageJsonConfigSchema,
+  blockReactConfigSchema,
   type BingoConfig,
 } from "../../../../src/workspace-config.ts";
 import { intakeFile } from "./intakeFile.ts";
@@ -71,6 +72,15 @@ function parseBlockGitHubActionsCI(literal: string | undefined) {
   });
 }
 
+function parseBlockReact(literal: string | undefined) {
+  if (literal === undefined) {
+    return undefined;
+  }
+
+  const oxcCompiler = parseBooleanProperty(literal, "oxcCompiler");
+  return blockReactConfigSchema.parse(oxcCompiler === undefined ? {} : { oxcCompiler });
+}
+
 function parseBlockAgentSkills(literal: string | undefined) {
   if (!literal) {
     return undefined;
@@ -114,10 +124,12 @@ export function intakeWorkspaceBingo(files: Record<string, unknown>): BingoConfi
 
   const blockAgentSkillsLiteral = extractPropertyObject(bingoLiteral, "blockAgentSkills");
   const blockGitHubActionsCILiteral = extractPropertyObject(bingoLiteral, "blockGitHubActionsCI");
+  const blockReactLiteral = extractPropertyObject(bingoLiteral, "blockReact");
 
   return bingoConfigSchema.parse({
     blockPackageJson,
     blockAgentSkills: parseBlockAgentSkills(blockAgentSkillsLiteral),
     blockGitHubActionsCI: parseBlockGitHubActionsCI(blockGitHubActionsCILiteral),
+    ...(blockReactLiteral === undefined ? {} : { blockReact: parseBlockReact(blockReactLiteral) }),
   });
 }

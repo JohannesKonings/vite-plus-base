@@ -44,6 +44,69 @@ export function mergeDevDependencies(
   };
 }
 
+const DEPENDENCY_FIELDS = ["dependencies", "devDependencies", "optionalDependencies"] as const;
+
+export function omitDependencyNames(
+  packageData: Record<string, unknown>,
+  names: string[] | undefined,
+): Record<string, unknown> {
+  if (!names?.length) {
+    return packageData;
+  }
+
+  const next = { ...packageData };
+
+  for (const field of DEPENDENCY_FIELDS) {
+    const value = next[field];
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      continue;
+    }
+
+    const dependencies = { ...(value as Record<string, string>) };
+    let removed = false;
+    for (const name of names) {
+      if (name in dependencies) {
+        delete dependencies[name];
+        removed = true;
+      }
+    }
+
+    if (!removed) {
+      continue;
+    }
+
+    if (Object.keys(dependencies).length === 0) {
+      delete next[field];
+    } else {
+      next[field] = dependencies;
+    }
+  }
+
+  return next;
+}
+
+export function applyScriptReplacements(
+  packageData: Record<string, unknown>,
+  replacements: Record<string, string> | undefined,
+): Record<string, unknown> {
+  if (!replacements || Object.keys(replacements).length === 0) {
+    return packageData;
+  }
+
+  const scripts = packageData.scripts;
+  if (!scripts || typeof scripts !== "object" || Array.isArray(scripts)) {
+    return packageData;
+  }
+
+  return {
+    ...packageData,
+    scripts: {
+      ...(scripts as Record<string, unknown>),
+      ...replacements,
+    },
+  };
+}
+
 function mergeDevEngineSpec(
   existing: DevEngineSpec | undefined,
   defaults: DevEngineSpec | undefined,

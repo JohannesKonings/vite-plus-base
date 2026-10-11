@@ -144,8 +144,26 @@ export async function listExtraTransitionIntakePaths(directory: string): Promise
     // no renovate config
   }
 
-  for (const packageJsonPath of await listWorkspacePackageJsonPaths(directory)) {
+  const packageJsonPaths = await listWorkspacePackageJsonPaths(directory);
+  for (const packageJsonPath of packageJsonPaths) {
     paths.push(packageJsonPath);
+  }
+
+  try {
+    await access(path.join(directory, "cdk.json"));
+    paths.push("cdk.json");
+  } catch {
+    // no root cdk app
+  }
+
+  for (const packageJsonPath of packageJsonPaths) {
+    const cdkPath = packageJsonPath.replace(/package\.json$/, "cdk.json");
+    try {
+      await access(path.join(directory, cdkPath));
+      paths.push(cdkPath);
+    } catch {
+      // workspace package has no cdk.json
+    }
   }
 
   for (const workflowPath of GITHUB_WORKFLOW_PATHS) {

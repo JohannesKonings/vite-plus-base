@@ -9,6 +9,8 @@
   },
   "devDependencies": {
     "@jaykingson/vite-plus-base": "workspace:*",
+    "@oxc-node/cli": "catalog:",
+    "@oxc-node/core": "catalog:",
     "@types/node": "catalog:",
     "dependency-cruiser": "^18.5.0",
     "typescript": "catalog:",

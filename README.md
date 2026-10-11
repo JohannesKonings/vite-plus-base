@@ -34,3 +34,5 @@ export default defineWorkspaceConfig({});
 ```
 
 See [packages/vite-plus-base/README.md](packages/vite-plus-base/README.md) for app and library presets.
+
+TypeScript scripts use `oxnode` (`@oxc-node/cli`) instead of `tsx`. The template migration guide is [docs/agents/oxnode.md](docs/agents/oxnode.md). Opt-in Vite 8 React setup, including the experimental Oxc React Compiler, is `bingo.blockReact`.

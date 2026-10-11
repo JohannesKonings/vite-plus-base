@@ -13,6 +13,7 @@ export {
   bingoConfigSchema,
   blockAgentSkillsConfigSchema,
   blockPackageJsonConfigSchema,
+  blockReactConfigSchema,
   glossaryMapEntrySchema,
   glossaryMapSchema,
 } from "./workspace-config.ts";
@@ -20,6 +21,7 @@ export type {
   BingoConfig,
   BlockAgentSkillsConfig,
   BlockPackageJsonConfig,
+  BlockReactConfig,
   GlossaryMapEntry,
   WorkspaceConfig,
 } from "./workspace-config.ts";

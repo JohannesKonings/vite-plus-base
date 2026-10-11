@@ -8,10 +8,12 @@ import { intakeFileAsJson } from "../intake/intakeFileAsJson.ts";
 import { intakeWorkspaceBingo } from "../intake/intakeWorkspaceBingo.ts";
 import { formatMinimalPnpmWorkspaceYaml, mergePnpmWorkspaceYaml } from "./pnpm-workspace.ts";
 import {
+  applyScriptReplacements,
   defaultDevEngines,
   defaultEngines,
   formatPackageJson,
   mergeDevDependencies,
+  omitDependencyNames,
 } from "./package-json.ts";
 
 const packageJsonProperties = blockPackageJsonConfigSchema
@@ -20,6 +22,8 @@ const packageJsonProperties = blockPackageJsonConfigSchema
     devDependencies: z.record(z.string(), z.string()).optional(),
     existingPackage: z.record(z.string(), z.unknown()).optional(),
     existingPnpmWorkspace: z.string().optional(),
+    removeDependencies: z.array(z.string()).optional(),
+    scriptReplacements: z.record(z.string(), z.string()).optional(),
     workspaceShape: z.enum(["single-package", "package-workspace"]).optional(),
   })
   .default({});
@@ -62,12 +66,24 @@ export const blockPackageJson = base.createBlock({
     const existingPackage =
       (addons.properties.existingPackage as Record<string, unknown> | undefined) ??
       options.packageData;
-    const packageData = { ...existingPackage };
-    const name = addons.properties.name ?? options.name;
-    const devDependencies = mergeDevDependencies(
-      packageData.devDependencies as Record<string, string> | undefined,
-      addons.properties.devDependencies,
+    const withoutRemoved = omitDependencyNames(
+      { ...existingPackage },
+      addons.properties.removeDependencies,
     );
+    const packageData = applyScriptReplacements(
+      withoutRemoved,
+      addons.properties.scriptReplacements,
+    );
+    const name = addons.properties.name ?? options.name;
+    const devDependencies = omitDependencyNames(
+      {
+        devDependencies: mergeDevDependencies(
+          packageData.devDependencies as Record<string, string> | undefined,
+          addons.properties.devDependencies,
+        ),
+      },
+      addons.properties.removeDependencies,
+    ).devDependencies as Record<string, string> | undefined;
 
     const workspaceShape = addons.properties.workspaceShape ?? "single-package";
     const existingPnpmWorkspace = addons.properties.existingPnpmWorkspace;
