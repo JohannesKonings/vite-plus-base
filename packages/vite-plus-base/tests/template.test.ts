@@ -104,6 +104,8 @@ describe("vite-plus-base-template", () => {
         "dependency-cruiser": "^18.5.0",
         "@types/node": "^24",
         typescript: "^7.0.2",
+        "@oxc-node/cli": "^0.1.5",
+        "@oxc-node/core": "^0.1.5",
       },
       devEngines: {
         packageManager: {

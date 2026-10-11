@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vite-plus/test";
 
 import {
+  applyScriptReplacements,
   defaultDevEngines,
   defaultEngines,
   formatPackageJson,
   mergeDevDependencies,
   mergeDevEngines,
   mergeEngines,
+  omitDependencyNames,
 } from "../template/src/blocks/blockPackageJson/package-json.ts";
 
 describe("package-json helpers", () => {
@@ -112,5 +114,32 @@ describe("package-json helpers", () => {
         2,
       )}\n`,
     );
+  });
+
+  it("drops a named dependency from every dependency field", () => {
+    expect(
+      omitDependencyNames(
+        {
+          dependencies: { tsx: "^4.0.0", react: "^19.0.0" },
+          devDependencies: { tsx: "^4.0.0", vite: "catalog:" },
+          optionalDependencies: { tsx: "^4.0.0" },
+        },
+        ["tsx"],
+      ),
+    ).toEqual({
+      dependencies: { react: "^19.0.0" },
+      devDependencies: { vite: "catalog:" },
+    });
+  });
+
+  it("replaces package.json script commands from an addon map", () => {
+    expect(
+      applyScriptReplacements(
+        { scripts: { dev: "tsx src/index.ts", check: "vp check" } },
+        { dev: "oxnode src/index.ts" },
+      ),
+    ).toEqual({
+      scripts: { dev: "oxnode src/index.ts", check: "vp check" },
+    });
   });
 });

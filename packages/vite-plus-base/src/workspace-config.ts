@@ -24,15 +24,21 @@ export const blockGitHubActionsCIConfigSchema = z.object({
   npmEnvironment: z.string().optional(),
 });
 
+export const blockReactConfigSchema = z.object({
+  oxcCompiler: z.boolean().optional(),
+});
+
 export const bingoConfigSchema = z.object({
   blockPackageJson: blockPackageJsonConfigSchema,
   blockAgentSkills: blockAgentSkillsConfigSchema.optional(),
   blockGitHubActionsCI: blockGitHubActionsCIConfigSchema.optional(),
+  blockReact: blockReactConfigSchema.optional(),
 });
 
 export type BlockPackageJsonConfig = z.infer<typeof blockPackageJsonConfigSchema>;
 export type BlockAgentSkillsConfig = z.infer<typeof blockAgentSkillsConfigSchema>;
 export type BlockGitHubActionsCIConfig = z.infer<typeof blockGitHubActionsCIConfigSchema>;
+export type BlockReactConfig = z.infer<typeof blockReactConfigSchema>;
 export type BingoConfig = z.infer<typeof bingoConfigSchema>;
 export type GlossaryMapEntry = z.infer<typeof glossaryMapEntrySchema>;
 

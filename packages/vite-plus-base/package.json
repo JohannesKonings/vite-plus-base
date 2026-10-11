@@ -48,7 +48,11 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "catalog:",
+    "@oxc-node/cli": "catalog:",
+    "@oxc-node/core": "catalog:",
     "@types/node": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "oxc-transform-react": "catalog:",
     "publint": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
