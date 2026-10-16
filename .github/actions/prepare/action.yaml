@@ -3,7 +3,7 @@ name: Prepare
 runs:
   using: composite
   steps:
-    - uses: voidzero-dev/setup-vp@v1.21.1
+    - uses: voidzero-dev/setup-vp@v1.21.2
       with:
         cache: "true"
         run-install: "false"
