@@ -174,8 +174,8 @@ catalogs:
       specifier: ^0.9.3
       version: 0.9.3
     bingo-stratum:
-      specifier: 0.7.1
-      version: 0.7.1
+      specifier: 0.8.0
+      version: 0.8.0
     publint:
       specifier: ^0.3.25
       version: 0.3.25
@@ -210,7 +210,7 @@ importers:
         version: 18.5.0
       node:
         specifier: runtime:^24.0.0
-        version: runtime:24.21.0
+        version: runtime:24.22.0
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -228,7 +228,7 @@ importers:
         version: 0.9.3
       bingo-stratum:
         specifier: 'catalog:'
-        version: 0.7.1(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.9.3)(zod@3.25.76)
+        version: 0.8.0(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.9.3)(zod@3.25.76)
       zod:
         specifier: 'catalog:'
         version: 3.25.76
@@ -1265,11 +1265,11 @@ packages:
     resolution: {integrity: sha512-cpvNWqMlFkbynxJzyKJ4B/R57zR2MsPkJSldNJRxSTN6LlgB9uzQ8jAeDZy2ENoUHNlH5nApv2JyHxVqFxcjSg==}
     engines: {node: '>=18'}
 
-  bingo-stratum@0.7.1:
-    resolution: {integrity: sha512-IULvgt/wn0GlTmlqN7ln+I4jx3QQkJcsmQOmhHfbo6TemWIRZE+/xWawQuJ6/BUObWtF7t6MeZm/Is2mEHcKmA==}
+  bingo-stratum@0.8.0:
+    resolution: {integrity: sha512-n3NlAge52Kg4os7OyexD79UccRYhdDUeqrL+mWxmDOoaGeJG6Hc7V1sBiB3p1rS7QJB13a8kGLhwQ71zyBCylg==}
     engines: {node: '>=20.18.0'}
     peerDependencies:
-      bingo: ^0.13.0
+      bingo: ^0.13.1
       bingo-fs: ^0.6.0
       bingo-systems: ^0.7.0
       zod: ^4.4.3
@@ -1686,7 +1686,7 @@ packages:
     resolution: {integrity: sha512-Z3lTE9pLaJF47NyMhd4ww1yFTAP8YhYI8SleJiHzM46Fgpm5cnNzSl9XfzFNqbaz+VlJrIj3fXQ4DeN1Rjm6cw==}
     engines: {node: '>=18'}
 
-  node@runtime:24.21.0:
+  node@runtime:24.22.0:
     resolution:
       type: variations
       variants:
@@ -1694,9 +1694,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-rseyRkr7mfB4wZywbSAdVDvTsxHLoHEoK84bF8l+WLs=
+            integrity: sha256-y7HWJfv6YbI/1KlJ6kHJsIu3kF+8dUA7sR1LzKc6VWY=
             type: binary
-            url: https://nodejs.org/download/release/v24.21.0/node-v24.21.0-aix-ppc64.tar.gz
+            url: https://nodejs.org/download/release/v24.22.0/node-v24.22.0-aix-ppc64.tar.gz
           targets:
             - cpu: ppc64
               os: aix
@@ -1704,9 +1704,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-vtfupTJeEQjzLOUijd1qXw8IpJnuQqp0Qq6lg3AvYFc=
+            integrity: sha256-apck2bUKXyK0gWze1EG1qNndrlRhkaXlt++lpeLuJtU=
             type: binary
-            url: https://nodejs.org/download/release/v24.21.0/node-v24.21.0-darwin-arm64.tar.gz
+            url: https://nodejs.org/download/release/v24.22.0/node-v24.22.0-darwin-arm64.tar.gz
           targets:
             - cpu: arm64
               os: darwin
@@ -1714,9 +1714,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-FGLLOzBGuBXPjqQ209pFDsGp8R2sflpGsK2lMF1+gJc=
+            integrity: sha256-SV4/JzxkXzxGd9Q4MEzfxwFynqXexXKPXI52ot7OS5E=
             type: binary
-            url: https://nodejs.org/download/release/v24.21.0/node-v24.21.0-darwin-x64.tar.gz
+            url: https://nodejs.org/download/release/v24.22.0/node-v24.22.0-darwin-x64.tar.gz
           targets:
             - cpu: x64
               os: darwin
@@ -1724,9 +1724,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-ckKCw7Q67JmKqVJzgEZbRdIp4CG1gDX19PYwleq/5dU=
+            integrity: sha256-t+eZHVQHgVrfp0oqnNTbaDVSyM4y/0opXCLpcoScP10=
             type: binary
-            url: https://nodejs.org/download/release/v24.21.0/node-v24.21.0-linux-arm64.tar.gz
+            url: https://nodejs.org/download/release/v24.22.0/node-v24.22.0-linux-arm64.tar.gz
           targets:
             - cpu: arm64
               os: linux
@@ -1734,9 +1734,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-UcXVMGbukpILYXg7A7Buy5nzZhFg97Fcp36EdBFaZ7w=
+            integrity: sha256-jLp7v2iam1imXlgRFG6o0B5J0H5x97hGLk9v/NfS5/0=
             type: binary
-            url: https://nodejs.org/download/release/v24.21.0/node-v24.21.0-linux-ppc64le.tar.gz
+            url: https://nodejs.org/download/release/v24.22.0/node-v24.22.0-linux-ppc64le.tar.gz
           targets:
             - cpu: ppc64le
               os: linux
@@ -1744,9 +1744,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-Xy+jdCLgx13jXBaG/lHXgyTywqj+LMI5pB2cAAop2Tg=
+            integrity: sha256-WQFxj1Uf+qduJQny1hLVvhb6ic3fvi1gEyXBDify0rY=
             type: binary
-            url: https://nodejs.org/download/release/v24.21.0/node-v24.21.0-linux-s390x.tar.gz
+            url: https://nodejs.org/download/release/v24.22.0/node-v24.22.0-linux-s390x.tar.gz
           targets:
             - cpu: s390x
               os: linux
@@ -1754,9 +1754,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-PWNAX8ZaDS0pdsHwvC/Se7C9ByEkaecFqsPwOuWrTJw=
+            integrity: sha256-qVoPryjW98STA28FWdbTK3uMeaoG5BWxJ4L5aUaERIQ=
             type: binary
-            url: https://nodejs.org/download/release/v24.21.0/node-v24.21.0-linux-x64-musl.tar.gz
+            url: https://nodejs.org/download/release/v24.22.0/node-v24.22.0-linux-x64-musl.tar.gz
           targets:
             - cpu: x64
               os: linux
@@ -1765,9 +1765,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-bh24fvWLiBnl1UAu/xU2SRsY7djre+5e94l4duiNxf8=
+            integrity: sha256-KOoKQ43poTvXiR/XWO7mx4Ge6K9UQt/Y1FvWXlbUIow=
             type: binary
-            url: https://nodejs.org/download/release/v24.21.0/node-v24.21.0-linux-x64.tar.gz
+            url: https://nodejs.org/download/release/v24.22.0/node-v24.22.0-linux-x64.tar.gz
           targets:
             - cpu: x64
               os: linux
@@ -1775,10 +1775,10 @@ packages:
             archive: zip
             bin:
               node: node.exe
-            integrity: sha256-h3mxveHTn41CDjtXqmV7OYka9DTT3kSpGQRM7AZ4WSE=
-            prefix: node-v24.21.0-win-arm64
+            integrity: sha256-OlwgmlvFnmWzvA+hPtXhZqJr09VTMoR/SYt2sDdAjWE=
+            prefix: node-v24.22.0-win-arm64
             type: binary
-            url: https://nodejs.org/download/release/v24.21.0/node-v24.21.0-win-arm64.zip
+            url: https://nodejs.org/download/release/v24.22.0/node-v24.22.0-win-arm64.zip
           targets:
             - cpu: arm64
               os: win32
@@ -1786,10 +1786,10 @@ packages:
             archive: zip
             bin:
               node: node.exe
-            integrity: sha256-FY92hbRN5R9sDfHRU1JsvNPhvHOajfxgdyHO913p5UE=
-            prefix: node-v24.21.0-win-x64
+            integrity: sha256-+Wg6GYd+EqmxZzBcjbcQQNgSh2NZ3iHw0ul8PzIfgMM=
+            prefix: node-v24.22.0-win-x64
             type: binary
-            url: https://nodejs.org/download/release/v24.21.0/node-v24.21.0-win-x64.zip
+            url: https://nodejs.org/download/release/v24.22.0/node-v24.22.0-win-x64.zip
           targets:
             - cpu: x64
               os: win32
@@ -1797,9 +1797,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-MEiwgR4VjKDYZytZyDmGF2PhREkpgNjSmzad/uRXR+Q=
+            integrity: sha256-aBKlPls3+8MkdtbDURA40rw7vRs7s0jWwE3Sxwocj0o=
             type: binary
-            url: https://unofficial-builds.nodejs.org/download/release/v24.21.0/node-v24.21.0-linux-arm64-musl.tar.gz
+            url: https://unofficial-builds.nodejs.org/download/release/v24.22.0/node-v24.22.0-linux-arm64-musl.tar.gz
           targets:
             - cpu: arm64
               os: linux
@@ -1808,14 +1808,14 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-AacT402pjntNKjGR7nyj+T3QOE0aLvI8N5shYe5uEzo=
+            integrity: sha256-cs0lP74MJTnVIgjtCY1Ht4/ywyunYpXY5rWwzgZ9y6U=
             type: binary
-            url: https://unofficial-builds.nodejs.org/download/release/v24.21.0/node-v24.21.0-linux-x64-musl.tar.gz
+            url: https://unofficial-builds.nodejs.org/download/release/v24.22.0/node-v24.22.0-linux-x64-musl.tar.gz
           targets:
             - cpu: x64
               os: linux
               libc: musl
-    version: 24.21.0
+    version: 24.22.0
     hasBin: true
 
   normalize-package-data@8.0.0:
@@ -3004,7 +3004,7 @@ snapshots:
     dependencies:
       '@octokit/types': 16.0.0
 
-  bingo-stratum@0.7.1(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.9.3)(zod@3.25.76):
+  bingo-stratum@0.8.0(bingo-fs@0.6.0)(bingo-systems@0.7.0)(bingo@0.9.3)(zod@3.25.76):
     dependencies:
       all-properties-lazy: 0.1.0
       bingo: 0.9.3
@@ -3385,7 +3385,7 @@ snapshots:
       emojilib: 2.4.0
       skin-tone: 2.0.0
 
-  node@runtime:24.21.0: {}
+  node@runtime:24.22.0: {}
 
   normalize-package-data@8.0.0:
     dependencies:
