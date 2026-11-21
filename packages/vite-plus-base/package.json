@@ -1,6 +1,6 @@
 {
   "name": "@jaykingson/vite-plus-base",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Opinionated vite-plus config wrapper for apps and libraries.",
   "license": "MIT",
   "repository": {
@@ -50,7 +50,7 @@
     "@arethetypeswrong/cli": "catalog:",
     "@types/node": "catalog:",
     "publint": "catalog:",
-    "typescript": "catalog:",
+    "tsrs": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },

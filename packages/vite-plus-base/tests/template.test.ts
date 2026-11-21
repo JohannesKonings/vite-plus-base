@@ -1,5 +1,4 @@
-import { produceTemplate, type Template } from "bingo";
-import { prepareOptions } from "bingo/lib/preparation/prepareOptions.js";
+import { prepareOptions, produceTemplate, type Template } from "bingo";
 import { describe, expect, it } from "vite-plus/test";
 
 import template from "../template/src/template.ts";
@@ -102,8 +101,8 @@ describe("vite-plus-base-template", () => {
       devDependencies: {
         vite: "catalog:",
         "dependency-cruiser": "^18.5.0",
-        "@types/node": "^24",
-        typescript: "^7.0.2",
+        "@types/node": "^26.6.6",
+        tsrs: "7.1.0-beta.tsrs2",
       },
       devEngines: {
         packageManager: {
@@ -157,7 +156,7 @@ describe("vite-plus-base-template", () => {
       },
       "npm.scriptRunner": "vp",
       "js/ts.experimental.useTsgo": true,
-      "js/ts.tsdk.path": "./node_modules/typescript",
+      "js/ts.tsdk.path": "./node_modules/tsrs/tsdk",
       "json.schemaDownload.enable": true,
     });
     expect(readVsCodeExtensions(creation.files)).toEqual({
@@ -472,7 +471,7 @@ Custom status surfaces section.
     expect(pkg.private).toBe(true);
   });
 
-  it("points VS Code at the repo TypeScript and keeps other settings", async () => {
+  it("points VS Code at the repo tsrs SDK and keeps other settings", async () => {
     const creation = await produceTemplate(stratumTemplate, {
       mode: "transition",
       options: templateOptions,
@@ -499,7 +498,7 @@ Custom status surfaces section.
       },
       "npm.scriptRunner": "vp",
       "js/ts.experimental.useTsgo": true,
-      "js/ts.tsdk.path": "./node_modules/typescript",
+      "js/ts.tsdk.path": "./node_modules/tsrs/tsdk",
       "json.schemaDownload.enable": true,
     });
     expect(readVsCodeExtensions(creation.files)).toEqual({
@@ -693,13 +692,13 @@ Custom status surfaces section.
     );
   });
 
-  it("preserves catalog TypeScript dependencies during transition", async () => {
+  it("preserves catalog tsrs dependencies during transition", async () => {
     const packageJsonWithCatalog = JSON.stringify({
       ...JSON.parse(existingPackageJson),
       devDependencies: {
         vite: "catalog:",
         "@types/node": "catalog:",
-        typescript: "catalog:",
+        tsrs: "catalog:",
       },
     });
 
@@ -712,7 +711,7 @@ Custom status surfaces section.
     } as unknown as Parameters<typeof produceTemplate>[1]);
 
     const pkg = JSON.parse(creation.files?.["package.json"] as string);
-    expect(pkg.devDependencies?.typescript).toBe("catalog:");
+    expect(pkg.devDependencies?.tsrs).toBe("catalog:");
     expect(pkg.devDependencies?.["@types/node"]).toBe("catalog:");
   });
 });

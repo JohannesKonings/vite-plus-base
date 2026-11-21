@@ -36,7 +36,7 @@ export const blockPackageJson = base.createBlock({
   about: {
     name: "Package JSON",
   },
-  addons: {
+  props: {
     properties: packageJsonProperties,
   },
   intake({ files }) {
@@ -58,19 +58,19 @@ export const blockPackageJson = base.createBlock({
       },
     };
   },
-  produce({ addons, options }) {
+  produce({ props, options }) {
     const existingPackage =
-      (addons.properties.existingPackage as Record<string, unknown> | undefined) ??
+      (props.properties.existingPackage as Record<string, unknown> | undefined) ??
       options.packageData;
     const packageData = { ...existingPackage };
-    const name = addons.properties.name ?? options.name;
+    const name = props.properties.name ?? options.name;
     const devDependencies = mergeDevDependencies(
       packageData.devDependencies as Record<string, string> | undefined,
-      addons.properties.devDependencies,
+      props.properties.devDependencies,
     );
 
-    const workspaceShape = addons.properties.workspaceShape ?? "single-package";
-    const existingPnpmWorkspace = addons.properties.existingPnpmWorkspace;
+    const workspaceShape = props.properties.workspaceShape ?? "single-package";
+    const existingPnpmWorkspace = props.properties.existingPnpmWorkspace;
 
     return {
       files: {

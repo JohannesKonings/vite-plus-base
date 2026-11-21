@@ -8,7 +8,7 @@ const VSCODE_SETTINGS_PATH = [".vscode", "settings.json"];
 const VSCODE_EXTENSIONS_PATH = [".vscode", "extensions.json"];
 export const VITE_PLUS_EXTENSION_PACK = "VoidZero.vite-plus-extension-pack";
 export const TYPESCRIPT_NATIVE_PREVIEW_EXTENSION = "typescriptteam.native-preview";
-export const TYPESCRIPT_SDK_PATH = "./node_modules/typescript";
+export const TYPESCRIPT_SDK_PATH = "./node_modules/tsrs/tsdk";
 
 const workspaceVitePlusSettings = {
   "editor.defaultFormatter": "oxc.oxc-vscode",
@@ -80,15 +80,15 @@ function vscodeFiles(
 }
 
 function blockVSCodeCreation({
-  addons,
+  props,
 }: {
-  addons: {
+  props: {
     settings?: Record<string, unknown>;
     extensions?: { recommendations?: string[] };
     skip?: boolean;
   };
 }) {
-  if (addons.skip) {
+  if (props.skip) {
     return {
       suggestions: [
         `Could not update .vscode/settings.json. Set "js/ts.experimental.useTsgo" to true and "js/ts.tsdk.path" to "${TYPESCRIPT_SDK_PATH}". Install the ${TYPESCRIPT_NATIVE_PREVIEW_EXTENSION} extension.`,
@@ -97,7 +97,7 @@ function blockVSCodeCreation({
   }
 
   return {
-    files: vscodeFiles(addons.settings, addons.extensions),
+    files: vscodeFiles(props.settings, props.extensions),
     suggestions: [
       `Install the recommended ${VITE_PLUS_EXTENSION_PACK} extension pack.`,
       `Install the recommended ${TYPESCRIPT_NATIVE_PREVIEW_EXTENSION} extension, then run TypeScript: Enable TypeScript 7.`,
@@ -109,7 +109,7 @@ export const blockVSCode = base.createBlock({
   about: {
     name: "VS Code",
   },
-  addons: {
+  props: {
     settings: z.record(z.string(), z.unknown()).optional(),
     extensions: z
       .object({

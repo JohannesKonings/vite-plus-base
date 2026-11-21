@@ -3,12 +3,12 @@ import { describe, expect, it } from "vite-plus/test";
 import { getPackageDependency, getPackageDependencies } from "../template/src/data/packageData.ts";
 
 describe("getPackageDependencies", () => {
-  it("copies TypeScript versions from the template package catalog", () => {
-    expect(getPackageDependencies("typescript", "@types/node")).toEqual({
-      typescript: "^7.0.2",
-      "@types/node": "^24",
+  it("copies tsrs versions from the template package catalog", () => {
+    expect(getPackageDependencies("tsrs", "@types/node")).toEqual({
+      tsrs: "7.1.0-beta.tsrs2",
+      "@types/node": "^26.6.6",
     });
-    expect(getPackageDependency("typescript")).toBe("^7.0.2");
+    expect(getPackageDependency("tsrs")).toBe("7.1.0-beta.tsrs2");
   });
 
   it("throws when the package does not depend on the requested name", () => {

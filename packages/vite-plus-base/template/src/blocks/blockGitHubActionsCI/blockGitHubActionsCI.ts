@@ -26,9 +26,9 @@ const zExtraJob = z.object({
 });
 
 function blockGitHubActionsCICreation({
-  addons,
+  props,
 }: {
-  addons: {
+  props: {
     emitRelease?: boolean;
     auth?: "oidc" | "token";
     npmEnvironment?: string;
@@ -40,33 +40,33 @@ function blockGitHubActionsCICreation({
     publishablePackages?: PackageManifest[];
   };
 }) {
-  const setupVpVersion = addons.setupVpVersion ?? DEFAULT_SETUP_VP_VERSION;
-  const workspaceShape = addons.workspaceShape ?? "single-package";
-  const publishablePackages = addons.publishablePackages ?? [];
-  const emitRelease = addons.emitRelease ?? publishablePackages.length > 0;
+  const setupVpVersion = props.setupVpVersion ?? DEFAULT_SETUP_VP_VERSION;
+  const workspaceShape = props.workspaceShape ?? "single-package";
+  const publishablePackages = props.publishablePackages ?? [];
+  const emitRelease = props.emitRelease ?? publishablePackages.length > 0;
 
   const prepareAction = createPrepareAction({ setupVpVersion });
   const ciWorkflow = createCiWorkflow({
     workspaceShape,
-    extraJobs: addons.extraJobs,
+    extraJobs: props.extraJobs,
   });
   const releaseWorkflow = emitRelease
     ? createReleaseWorkflow({
         workspaceShape,
         publishablePackages,
-        npmEnvironment: addons.npmEnvironment,
+        npmEnvironment: props.npmEnvironment,
       })
     : undefined;
 
   const workflowFiles: Record<string, string> = {
-    "ci.yaml": withPreviously(ciWorkflow, ["ci.yml"], addons.existingCiWorkflow),
+    "ci.yaml": withPreviously(ciWorkflow, ["ci.yml"], props.existingCiWorkflow),
   };
 
   if (releaseWorkflow) {
     workflowFiles["release.yaml"] = withPreviously(
       releaseWorkflow,
       ["release.yml"],
-      addons.existingReleaseWorkflow,
+      props.existingReleaseWorkflow,
     );
   }
 
@@ -102,7 +102,7 @@ export const blockGitHubActionsCI = base.createBlock({
   about: {
     name: "GitHub Actions CI",
   },
-  addons: {
+  props: {
     emitRelease: z.boolean().optional(),
     auth: z.enum(["oidc", "token"]).optional(),
     npmEnvironment: z.string().optional(),
@@ -152,7 +152,7 @@ export const blockGitHubActionsCI = base.createBlock({
   transition(context) {
     return {
       ...blockGitHubActionsCICreation(context),
-      addons: [
+      extensions: [
         blockRemoveFiles({
           files: [
             ".circleci",

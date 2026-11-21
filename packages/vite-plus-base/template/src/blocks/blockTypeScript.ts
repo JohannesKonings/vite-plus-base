@@ -9,13 +9,13 @@ function typescriptPackageJsonAddon(packageData: Record<string, unknown> | undef
   const existingDevDependencies = packageData?.devDependencies as
     | Record<string, string>
     | undefined;
-  const versions = getPackageDependencies("typescript", "@types/node");
+  const versions = getPackageDependencies("tsrs", "@types/node");
 
   return blockPackageJson({
     properties: {
       existingPackage: packageData,
       devDependencies: {
-        typescript: existingDevDependencies?.typescript ?? versions.typescript,
+        tsrs: existingDevDependencies?.tsrs ?? versions.tsrs,
         "@types/node": existingDevDependencies?.["@types/node"] ?? versions["@types/node"],
       },
     },
@@ -23,24 +23,24 @@ function typescriptPackageJsonAddon(packageData: Record<string, unknown> | undef
 }
 
 function resolvePackageData(
-  addons: { packageData?: Record<string, unknown> },
+  props: { packageData?: Record<string, unknown> },
   options: { packageData?: Record<string, unknown> },
 ) {
-  return addons.packageData ?? options.packageData;
+  return props.packageData ?? options.packageData;
 }
 
 function blockTypeScriptCreation({
-  addons,
+  props,
   options,
 }: {
-  addons: { packageData?: Record<string, unknown> };
+  props: { packageData?: Record<string, unknown> };
   options: { packageData?: Record<string, unknown> };
 }) {
-  const packageData = resolvePackageData(addons, options);
+  const packageData = resolvePackageData(props, options);
 
   return {
-    addons: [typescriptPackageJsonAddon(packageData)],
-    suggestions: ["typescript and @types/node were added to devDependencies."],
+    extensions: [typescriptPackageJsonAddon(packageData)],
+    suggestions: ["tsrs and @types/node were added to devDependencies."],
   };
 }
 
@@ -48,7 +48,7 @@ export const blockTypeScript = base.createBlock({
   about: {
     name: "TypeScript",
   },
-  addons: {
+  props: {
     packageData: z.record(z.string(), z.unknown()).optional(),
   },
   intake({ files }) {
