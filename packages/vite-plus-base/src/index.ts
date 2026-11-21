@@ -24,15 +24,18 @@ export type {
   WorkspaceConfig,
 } from "./workspace-config.ts";
 
-export function defineConfig(config: ViteUserConfig = {}) {
+export function defineConfig(config: ViteUserConfig = {}): ViteUserConfig {
   return vpDefineConfig(mergeConfig(sharedDefaults, config));
 }
 
-export function defineWorkspaceConfig({ bingo: _bingo, ...config }: WorkspaceConfig) {
+export function defineWorkspaceConfig({
+  bingo: _bingo,
+  ...config
+}: WorkspaceConfig): ViteUserConfig {
   return vpDefineConfig(mergeConfig(workspaceDefaults, config));
 }
 
-export function defineLibraryConfig(config: ViteUserConfig = {}) {
+export function defineLibraryConfig(config: ViteUserConfig = {}): ViteUserConfig {
   return vpDefineConfig(mergeConfig(libraryDefaults, config));
 }
 
