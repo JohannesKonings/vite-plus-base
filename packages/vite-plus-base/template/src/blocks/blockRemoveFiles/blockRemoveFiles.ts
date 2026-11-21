@@ -17,14 +17,14 @@ export const blockRemoveFiles = base.createBlock({
   about: {
     name: "Remove Files",
   },
-  addons: {
+  props: {
     files: z.array(z.string()).optional(),
   },
   produce() {
     return {};
   },
-  transition({ addons }) {
-    if (!addons.files?.length) {
+  transition({ props }) {
+    if (!props.files?.length) {
       return {};
     }
 
@@ -33,7 +33,7 @@ export const blockRemoveFiles = base.createBlock({
         {
           phase: 1,
           // Bingo runs commands without a shell, so leave globs unquoted for find.
-          commands: addons.files.flatMap((file) => removeCommands(file)),
+          commands: props.files.flatMap((file) => removeCommands(file)),
           silent: true,
         },
       ],

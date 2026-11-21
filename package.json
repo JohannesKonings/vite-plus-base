@@ -10,24 +10,24 @@
   "devDependencies": {
     "@jaykingson/vite-plus-base": "workspace:*",
     "@types/node": "catalog:",
-    "dependency-cruiser": "^18.5.0",
-    "typescript": "catalog:",
+    "dependency-cruiser": "catalog:",
+    "tsrs": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "12.9.1",
+      "version": "12.21.0",
       "onFail": "download"
     },
     "runtime": {
       "name": "node",
-      "version": "^24.0.0",
+      "version": "^26.13.1",
       "onFail": "download"
     }
   },
   "engines": {
-    "node": ">=22.18.0"
+    "node": ">=26.13.1 "
   }
 }

@@ -41,7 +41,7 @@ export const libraryDefaults: ViteUserConfig = {
       resolveDepSubpath: true,
     },
     dts: {
-      generator: "tsgo",
+      generator: "oxc",
     },
     exports: true,
   },

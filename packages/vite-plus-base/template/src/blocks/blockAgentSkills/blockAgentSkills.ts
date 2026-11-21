@@ -51,14 +51,14 @@ function dependencyCruiserPackageJsonAddon(packageData: Record<string, unknown> 
 }
 
 function resolvePackageData(
-  addons: { packageData?: Record<string, unknown> },
+  props: { packageData?: Record<string, unknown> },
   options: { packageData?: Record<string, unknown> },
 ) {
-  return addons.packageData ?? options.packageData;
+  return props.packageData ?? options.packageData;
 }
 
 function buildAgentSetupFiles(
-  addons: {
+  props: {
     issueTrackerDoc?: string;
     triageLabelsDoc?: string;
     domainDoc?: string;
@@ -71,13 +71,13 @@ function buildAgentSetupFiles(
   }
 
   const skip = new Set<string>();
-  if (addons.issueTrackerDoc) {
+  if (props.issueTrackerDoc) {
     skip.add("issue-tracker.md");
   }
-  if (addons.triageLabelsDoc) {
+  if (props.triageLabelsDoc) {
     skip.add("triage-labels.md");
   }
-  if (addons.domainDoc) {
+  if (props.domainDoc) {
     skip.add("domain.md");
   }
 
@@ -97,11 +97,11 @@ function buildAgentSetupFiles(
 }
 
 function blockAgentSkillsCreation({
-  addons,
+  props,
   options,
   mode,
 }: {
-  addons: {
+  props: {
     packageData?: Record<string, unknown>;
     agentsMd?: string;
     issueTrackerDoc?: string;
@@ -116,21 +116,21 @@ function blockAgentSkillsCreation({
   };
   mode: "produce" | "transition";
 }) {
-  const packageData = resolvePackageData(addons, options);
-  const glossaryMap = addons.glossaryMap ?? options.glossaryMap;
+  const packageData = resolvePackageData(props, options);
+  const glossaryMap = props.glossaryMap ?? options.glossaryMap;
   const multiContext = Boolean(glossaryMap && Object.keys(glossaryMap).length > 0);
   const preserveDocs = mode === "transition";
   const agentsMd =
-    preserveDocs && addons.agentsMd ? undefined : patchAgentsMd(addons.agentsMd, multiContext);
+    preserveDocs && props.agentsMd ? undefined : patchAgentsMd(props.agentsMd, multiContext);
 
   const files = {
-    ...buildAgentSetupFiles(addons, preserveDocs),
+    ...buildAgentSetupFiles(props, preserveDocs),
     ...vendoredSkillFiles(),
     ...(mode === "produce"
       ? { [DEPENDENCY_CRUISER_CONFIG_PATH]: projectDependencyCruiserConfig }
       : {}),
     ...(agentsMd ? { "AGENTS.md": agentsMd } : {}),
-    ...(glossaryMap && !(preserveDocs && addons.glossaryMapMd)
+    ...(glossaryMap && !(preserveDocs && props.glossaryMapMd)
       ? { "GLOSSARY-MAP.md": formatGlossaryMap(glossaryMap) }
       : {}),
   };
@@ -150,7 +150,7 @@ function blockAgentSkillsCreation({
         ];
 
   return {
-    addons: [
+    extensions: [
       dependencyCruiserPackageJsonAddon(packageData),
       ...(mode === "transition"
         ? [
@@ -170,7 +170,7 @@ export const blockAgentSkills = base.createBlock({
   about: {
     name: "Agent Skills",
   },
-  addons: {
+  props: {
     packageData: z.record(z.string(), z.unknown()).optional(),
     agentsMd: z.string().optional(),
     issueTrackerDoc: z.string().optional(),
