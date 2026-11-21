@@ -120,7 +120,7 @@ describe("@jaykingson/vite-plus-base", () => {
     const pack = Array.isArray(libraryDefaults.pack)
       ? libraryDefaults.pack[0]
       : libraryDefaults.pack;
-    expect(pack?.dts).toEqual({ generator: "tsgo" });
+    expect(pack?.dts).toEqual({ generator: "oxc" });
     expect(pack?.exports).toBe(true);
   });
 
@@ -159,7 +159,7 @@ describe("@jaykingson/vite-plus-base", () => {
     const config = await resolveConfig(defineLibraryConfig({}));
     const pack = Array.isArray(config.pack) ? config.pack[0] : config.pack;
     expect(pack?.exports).toBe(true);
-    expect(pack?.dts).toEqual({ generator: "tsgo" });
+    expect(pack?.dts).toEqual({ generator: "oxc" });
   });
 });
 
